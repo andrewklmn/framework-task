@@ -1,3 +1,5 @@
+Kottans Frontend 2021
+
 # Framework task - Breaking News Web App
 
 This Web App will be gathering breaking news by topics, tags or keywords.
