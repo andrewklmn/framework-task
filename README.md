@@ -2,7 +2,7 @@ Kottans Frontend 2021
 
 # Framework task - Breaking News Web App
 
-This Web App will collect the latest news by topics, tags or keywords.
+This Web App will collect the latest news by topics, tags or keywords using [News API](https://newsapi.org/?ref=apilist.fun).
 
 Features:
 1. User management: registration, login, logout
