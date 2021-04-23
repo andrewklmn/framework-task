@@ -1,3 +1,14 @@
-img {
-  width: 100px;
+.container {
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.news-item {
+  width: 300px;
+}
+
+.news-img {
+  width: 200px;
 }
