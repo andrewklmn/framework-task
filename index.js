@@ -11,6 +11,7 @@ if (module.hot) {
 window.dataStore = {
   news: rawNewsData,
   newsItemsToShow: NUMBER_OF_SHOWED_NEWS_ITEMS,
+  filterWord: '',
 };
 
 window.renderApp = renderApp;
@@ -24,14 +25,26 @@ function renderApp() {
 
 function app() {
   return `
+    ${filter(dataStore)}
     <div class="${containerClass}">
       ${newsList(dataStore)}
     </div>
   `;
 }
 
-function newsList({ news, newsItemsToShow }) {
-  const list = news.articles.splice(0, newsItemsToShow);
+function filterHandler({ title, content }, filterWord) {
+  if (filterWord != '' && (content.includes(filterWord) || title.includes(filterWord))) {
+    return true;
+  }
+  if (filterWord == '') return true;
+
+  return false;
+}
+
+function newsList({ news, newsItemsToShow, filterWord }) {
+  const list = news.articles
+    .filter(article => filterHandler(article, filterWord))
+    .splice(0, newsItemsToShow);
   let resultHTML = '';
   list.forEach(
     article =>
@@ -50,5 +63,16 @@ function newsItem({ title, urlToImage, content, url }) {
       <p>${content}</p>
       Source is here <a target="_blank" href="${url}">${url}</a>
     </div>
+  `;
+}
+
+function handleFilterChange({ value }) {
+  window.dataStore.filterWord = value;
+  window.renderApp();
+}
+
+function filter({ filterWord }) {
+  return `
+    <input onchange="(${handleFilterChange})(this)" value="${filterWord}" name="filter" placeholder="Enter keyword"/>
   `;
 }
