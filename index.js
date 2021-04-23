@@ -80,6 +80,7 @@ function handleFilterChange({ value }) {
 
 function filter({ filterWord }) {
   return `
+    Filtered by:
     <input onchange="(${handleFilterChange})(this)" value="${filterWord}" name="filter" placeholder="Enter keyword"/>
   `;
 }
@@ -127,6 +128,7 @@ function topThreeWordsButtons({ news, filterWord }) {
 
   return `
     <span>
+      Most common words in news:
       ${threeWord.reduce((acc, word) => {
         return `
           ${acc}
