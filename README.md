@@ -6,8 +6,8 @@ This Web App will collect the latest news by topics, tags or keywords using [New
 
 Features:
 
-1. Config management: topics, tags, keywords
-2. Collecting and reading the latest news by user config
+1. Collecting and reading the latest news
+2. Filters: topics, tags, keywords
 3. Translating news on spot using Translation API\*
 4. News archive by date in localStorage or IndexedDB\*
 5. User management: registration, login, logout\*
