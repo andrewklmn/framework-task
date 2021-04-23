@@ -33,7 +33,11 @@ function app() {
 }
 
 function filterHandler({ title, content }, filterWord) {
-  if (filterWord != '' && (content.includes(filterWord) || title.includes(filterWord))) {
+  if (
+    filterWord != '' &&
+    (content.toLowerCase().includes(filterWord.toLowerCase()) ||
+      title.toLowerCase().includes(filterWord.toLowerCase()))
+  ) {
     return true;
   }
   if (filterWord == '') return true;
