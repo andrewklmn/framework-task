@@ -3,6 +3,7 @@ import { containerClass, newsItemClass, newsImageClass } from './style.css';
 
 const newsAPIkey = 'c66d33daf75d4760b60252aef3f48983';
 const NUMBER_OF_SHOWED_NEWS_ITEMS = 12;
+const notImportantWords = ['chars]', 'ahead'];
 
 if (module.hot) {
   module.hot.accept();
@@ -26,6 +27,8 @@ function renderApp() {
 function app() {
   return `
     ${filter(dataStore)}
+    ${resetFilterButton()}
+    ${topThreeWordsButtons(dataStore)}
     <div class="${containerClass}">
       ${newsList(dataStore)}
     </div>
@@ -78,5 +81,70 @@ function handleFilterChange({ value }) {
 function filter({ filterWord }) {
   return `
     <input onchange="(${handleFilterChange})(this)" value="${filterWord}" name="filter" placeholder="Enter keyword"/>
+  `;
+}
+
+function getTopThreeWords(text) {
+  let regex = '.*[a-zA-Z].*';
+  if (text.match(regex)) {
+    let wordMap = new Map();
+    text.split(' ').forEach(word => {
+      if (word) {
+        word = word.toLowerCase();
+        if (notImportantWords.includes(word) || word.length < 5) {
+          return;
+        }
+        if (wordMap.has(word)) {
+          let count = wordMap.get(word);
+          count++;
+          wordMap.set(word, count);
+        } else {
+          wordMap.set(word, 1);
+        }
+      }
+    });
+    const sortedWordMap = new Map([...wordMap.entries()].sort((a, b) => b[1] - a[1]));
+
+    let result = Array.from(sortedWordMap.keys()).filter((word, index) => index < 3);
+    result = result.map(res => {
+      res = res.replace(/[/.,]/g, '');
+      if (res !== '') {
+        return res;
+      }
+    });
+    return result.filter(res => res !== undefined);
+  } else {
+    return [];
+  }
+}
+
+function topThreeWordsButtons({ news, filterWord }) {
+  const wholeText = news.articles.reduce((acc, article) => {
+    const { content, title } = article;
+    return (acc += `${content} ${title} `);
+  }, '');
+  const threeWord = getTopThreeWords(wholeText);
+
+  return `
+    <span>
+      ${threeWord.reduce((acc, word) => {
+        return `
+          ${acc}
+          ${keyWordButton(word)}
+        `;
+      }, '')}      
+    </span>
+  `;
+}
+
+function keyWordButton(word) {
+  return `
+    <input type="button" onclick="(${handleFilterChange})(this)" value="${word}"/>
+  `;
+}
+
+function resetFilterButton() {
+  return `
+    <input type="button" onclick="(${handleFilterChange})({value: ''})" value="Reset filter"/>
   `;
 }
