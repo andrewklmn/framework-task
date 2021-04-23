@@ -1,7 +1,8 @@
 import { rawNewsData } from './fixtures';
+import { containerClass, newsItemClass, newsImageClass } from './style.css';
 
 const newsAPIkey = 'c66d33daf75d4760b60252aef3f48983';
-const NUMBER_OF_SHOWED_NEWS_ITEMS = 10;
+const NUMBER_OF_SHOWED_NEWS_ITEMS = 12;
 
 if (module.hot) {
   module.hot.accept();
@@ -23,7 +24,7 @@ function renderApp() {
 
 function app() {
   return `
-    <div class="container">
+    <div class="${containerClass}">
       ${newsList(dataStore)}
     </div>
   `;
@@ -43,9 +44,9 @@ function newsList({ news, newsItemsToShow }) {
 
 function newsItem({ title, urlToImage, content, url }) {
   return `
-    <div class="news-item">
+    <div class="${newsItemClass}">
       <h3>${title}</h3>
-      <img class="news-img" src="${urlToImage}"/>
+      ${urlToImage ? `<img class="${newsImageClass}" src="${urlToImage}"/>` : ''}      
       <p>${content}</p>
       Source is here <a target="_blank" href="${url}">${url}</a>
     </div>
