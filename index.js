@@ -78,10 +78,12 @@ function handleFilterChange({ value }) {
   window.renderApp();
 }
 
+window.handleFilterChange = handleFilterChange;
+
 function filter({ filterWord }) {
   return `
     Filtered by:
-    <input onchange="(${handleFilterChange})(this)" value="${filterWord}" name="filter" placeholder="Enter keyword"/>
+    <input onchange="handleFilterChange(this);" value="${filterWord}" name="filter" placeholder="Enter keyword"/>
   `;
 }
 
@@ -141,12 +143,12 @@ function topThreeWordsButtons({ news, filterWord }) {
 
 function keyWordButton(word) {
   return `
-    <input type="button" onclick="(${handleFilterChange})(this)" value="${word}"/>
+    <input type="button" onclick="handleFilterChange(this);" value="${word}"/>
   `;
 }
 
 function resetFilterButton() {
   return `
-    <input type="button" onclick="(${handleFilterChange})({value: ''})" value="Reset filter"/>
+    <input type="button" onclick="handleFilterChange({value: ''});" value="Reset filter"/>
   `;
 }
