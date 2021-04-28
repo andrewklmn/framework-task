@@ -1,7 +1,7 @@
 import { rawNewsData } from './fixtures';
 import { containerClass, newsItemClass, newsImageClass } from './style.css';
 
-const newsAPIkey = 'c66d33daf75d4760b60252aef3f48983';
+const newsAPIkey = process.env.SERVICE_API_KEY;
 const NUMBER_OF_SHOWED_NEWS_ITEMS = 12;
 const notImportantWords = ['chars]', 'ahead'];
 
@@ -20,17 +20,17 @@ renderApp();
 
 function renderApp() {
   document.querySelector('.root').innerHTML = `
-    ${app()}
+    ${App()}
   `;
 }
 
-function app() {
+function App() {
   return `
-    ${filter(dataStore)}
-    ${resetFilterButton()}
-    ${topThreeWordsButtons(dataStore)}
+    ${Filter(dataStore)}
+    ${ResetFilterButton()}
+    ${TopThreeWordsButtons(dataStore)}
     <div class="${containerClass}">
-      ${newsList(dataStore)}
+      ${NewsList(dataStore)}
     </div>
   `;
 }
@@ -48,21 +48,19 @@ function filterHandler({ title, content }, filterWord) {
   return false;
 }
 
-function newsList({ news, newsItemsToShow, filterWord }) {
+function NewsList({ news, newsItemsToShow, filterWord }) {
   const list = news.articles
     .filter(article => filterHandler(article, filterWord))
-    .splice(0, newsItemsToShow);
-  let resultHTML = '';
-  list.forEach(
-    article =>
-      (resultHTML += `
-        ${newsItem(article)}
-    `),
-  );
-  return resultHTML;
+    .splice(0, newsItemsToShow)
+    .map(article => `${NewsItem(article)}`)
+    .join('');
+
+  return `
+    ${list}
+  `;
 }
 
-function newsItem({ title, urlToImage, content, url }) {
+function NewsItem({ title, urlToImage, content, url }) {
   return `
     <div class="${newsItemClass}">
       <h3>${title}</h3>
@@ -80,7 +78,7 @@ function handleFilterChange({ value }) {
 
 window.handleFilterChange = handleFilterChange;
 
-function filter({ filterWord }) {
+function Filter({ filterWord }) {
   return `
     Filtered by:
     <input onchange="handleFilterChange(this);" value="${filterWord}" name="filter" placeholder="Enter keyword"/>
@@ -121,7 +119,7 @@ function getTopThreeWords(text) {
   }
 }
 
-function topThreeWordsButtons({ news, filterWord }) {
+function TopThreeWordsButtons({ news, filterWord }) {
   const wholeText = news.articles.reduce((acc, article) => {
     const { content, title } = article;
     return (acc += `${content} ${title} `);
@@ -131,23 +129,18 @@ function topThreeWordsButtons({ news, filterWord }) {
   return `
     <span>
       Most common words in news:
-      ${threeWord.reduce((acc, word) => {
-        return `
-          ${acc}
-          ${keyWordButton(word)}
-        `;
-      }, '')}      
+      ${threeWord.map(word => `${KeyWordButton(word)}`).join('')}
     </span>
   `;
 }
 
-function keyWordButton(word) {
+function KeyWordButton(word) {
   return `
     <input type="button" onclick="handleFilterChange(this);" value="${word}"/>
   `;
 }
 
-function resetFilterButton() {
+function ResetFilterButton() {
   return `
     <input type="button" onclick="handleFilterChange({value: ''});" value="Reset filter"/>
   `;
