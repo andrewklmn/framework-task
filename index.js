@@ -24,10 +24,15 @@ function renderApp() {
   `;
 }
 
-function App() {
+function ControlPanel(dataStore) {
   return `
-    ${Filter(dataStore)}
-    ${ResetFilterButton()}
+    ${SearchField(dataStore)}
+    ${ResetSearchButton()}
+  `;
+}
+
+function ResultArea(dataStore) {
+  return `
     ${TopThreeWordsButtons(dataStore)}
     <div class="${containerClass}">
       ${NewsList(dataStore)}
@@ -35,22 +40,32 @@ function App() {
   `;
 }
 
-function filterHandler({ title, content }, filterWord) {
+// initial state
+// data loading state
+// result state
+// error state
+
+function App() {
+  return `
+    ${ControlPanel(dataStore)}
+    ${ResultArea(dataStore)}
+  `;
+}
+
+function isWordInArticle({ title, content }, searchWord) {
   if (
-    filterWord != '' &&
-    (content.toLowerCase().includes(filterWord.toLowerCase()) ||
-      title.toLowerCase().includes(filterWord.toLowerCase()))
+    searchWord == '' ||
+    content.toLowerCase().includes(searchWord.toLowerCase()) ||
+    title.toLowerCase().includes(searchWord.toLowerCase())
   ) {
     return true;
   }
-  if (filterWord == '') return true;
-
   return false;
 }
 
 function NewsList({ news, newsItemsToShow, filterWord }) {
   const list = news.articles
-    .filter(article => filterHandler(article, filterWord))
+    .filter(article => isWordInArticle(article, filterWord))
     .splice(0, newsItemsToShow)
     .map(article => `${NewsItem(article)}`)
     .join('');
@@ -78,7 +93,7 @@ function handleFilterChange({ value }) {
 
 window.handleFilterChange = handleFilterChange;
 
-function Filter({ filterWord }) {
+function SearchField({ filterWord }) {
   return `
     Filtered by:
     <input onchange="handleFilterChange(this);" value="${filterWord}" name="filter" placeholder="Enter keyword"/>
@@ -140,7 +155,7 @@ function KeyWordButton(word) {
   `;
 }
 
-function ResetFilterButton() {
+function ResetSearchButton() {
   return `
     <input type="button" onclick="handleFilterChange({value: ''});" value="Reset filter"/>
   `;
