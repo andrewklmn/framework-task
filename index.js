@@ -62,13 +62,17 @@ function validateAndLoadData() {
     } else {
       window.dataStore.lastReadAt = Date.now();
 
-      return fetch(`https://newsapi.org/v2/top-headlines?country=${country}&apiKey=${newsAPIkey}`)
+      return fetch(
+        `https://litos.kiev.ua/top_news_gate.php?country=${country}&apiKey=${newsAPIkey}`,
+      )
         .then(response => response.json())
         .then(catchErrorInAnswer);
     }
   }
 
-  return fetch(`https://newsapi.org/v2/everything?q=${encodeURI(searchWord)}&apiKey=${newsAPIkey}`)
+  return fetch(
+    `https://litos.kiev.ua/news_gate.php?q=${encodeURI(searchWord)}&apiKey=${newsAPIkey}`,
+  )
     .then(response => response.json())
     .then(catchErrorInAnswer);
 }
