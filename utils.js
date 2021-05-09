@@ -14,6 +14,19 @@ const notImportantWords = [
   'ought',
 ];
 
+export function filterArticleByWord(article, word) {
+  const searchWord = word ? word.toLowerCase() : '';
+  if (
+    word == '' ||
+    (article.title && article.title.toLowerCase().includes(searchWord)) ||
+    (article.description && article.description.toLowerCase().includes(searchWord)) ||
+    (article.content && article.content.toLowerCase().includes(searchWord))
+  )
+    return true;
+
+  return false;
+}
+
 export function getTopWords(text, numberOfWords, excludeWord = '') {
   let regex = '.*[a-zA-Zа-яА-Я].*';
   if (text.match(regex)) {
@@ -52,11 +65,12 @@ export function getTopWords(text, numberOfWords, excludeWord = '') {
   }
 }
 
-export function isWordInArticle({ title, description }, searchWord) {
+export function isWordInArticle({ title, content, description }, searchWord) {
   if (
     searchWord == '' ||
-    description.toLowerCase().includes(searchWord.toLowerCase()) ||
-    title.toLowerCase().includes(searchWord.toLowerCase())
+    (description && description.toLowerCase().includes(searchWord.toLowerCase())) ||
+    (content && content.toLowerCase().includes(searchWord.toLowerCase())) ||
+    (title && title.toLowerCase().includes(searchWord.toLowerCase()))
   ) {
     return true;
   }
