@@ -56,9 +56,6 @@ function catchErrorInAnswer(data) {
 
 function validateAndLoadData() {
   const { country, searchWord, newsAPIkey, lastReadAt, articles } = window.dataStore;
-  const topNewsLink = `https://newsapi.org/v2/top-headlines?country=${country}&apiKey=${newsAPIkey}`;
-
-  let url;
   if (!searchWord || searchWord === '') {
     url = topNewsLink;
     window.dataStore.searchWord = '';
@@ -66,15 +63,14 @@ function validateAndLoadData() {
       return Promise.resolve([...window.dataStore.cache]);
     } else {
       window.dataStore.lastReadAt = Date.now();
-      return fetch(url)
+
+      return fetch(`https://newsapi.org/v2/top-headlines?country=${country}&apiKey=${newsAPIkey}`)
         .then(response => response.json())
         .then(catchErrorInAnswer);
     }
   }
 
-  url = `https://newsapi.org/v2/everything?q=${encodeURI(searchWord)}&apiKey=${newsAPIkey}`;
-
-  return fetch(url)
+  return fetch(`https://newsapi.org/v2/everything?q=${encodeURI(searchWord)}&apiKey=${newsAPIkey}`)
     .then(response => response.json())
     .then(catchErrorInAnswer);
 }
