@@ -102,6 +102,7 @@ function GivenDataArea(dataStore) {
   return `
     <div class="${contentClass}">
       ${SearchField(dataStore)}
+      ${RefreshButton()}
       ${ResetSearchButton()}
     </div>
   `;
@@ -197,6 +198,12 @@ function TopWordsButtons({ articles, searchWord }) {
 function KeyWordButton(word) {
   return `
     <input class="${keywordClass}" type="button" onclick="performSearch(this.value);" value="${word}"/>
+  `;
+}
+
+function RefreshButton() {
+  return `
+    <input type="button" onclick="performSearch(window.dataStore.searchWord);" value="Refresh"/>
   `;
 }
 
