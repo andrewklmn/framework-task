@@ -47,7 +47,6 @@ function renderApp() {
 function catchErrorInAnswer(data) {
   if (data.status === 'error') {
     window.dataStore.lastReadAt = null;
-    window.dataStore.dataIsLoading = false;
     return Promise.reject(data.message);
   }
   window.dataStore.cache = [...data.articles];
@@ -57,7 +56,6 @@ function catchErrorInAnswer(data) {
 function validateAndLoadData() {
   const { country, searchWord, newsAPIkey, lastReadAt, articles } = window.dataStore;
   if (!searchWord || searchWord === '') {
-    url = topNewsLink;
     window.dataStore.searchWord = '';
     if (lastReadAt && Date.now() - lastReadAt < REFRESH_DELAY_IN_MS) {
       return Promise.resolve([...window.dataStore.cache]);
