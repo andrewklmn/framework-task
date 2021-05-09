@@ -44,6 +44,16 @@ function renderApp() {
   `;
 }
 
+function catchErrorInAnswer(data) {
+  if (data.status === 'error') {
+    window.dataStore.lastReadAt = null;
+    window.dataStore.dataIsLoading = false;
+    return Promise.reject(data.message);
+  }
+  window.dataStore.cache = [...data.articles];
+  return data.articles;
+}
+
 function validateAndLoadData() {
   const { country, searchWord, newsAPIkey, lastReadAt, articles } = window.dataStore;
   const topNewsLink = `https://newsapi.org/v2/top-headlines?country=${country}&apiKey=${newsAPIkey}`;
@@ -58,13 +68,7 @@ function validateAndLoadData() {
       window.dataStore.lastReadAt = Date.now();
       return fetch(url)
         .then(response => response.json())
-        .then(data => {
-          window.dataStore.cache = [...data.articles];
-          return data.articles;
-        })
-        .catch(error => {
-          window.dataStore.error = error;
-        });
+        .then(catchErrorInAnswer);
     }
   }
 
@@ -72,10 +76,7 @@ function validateAndLoadData() {
 
   return fetch(url)
     .then(response => response.json())
-    .then(data => data.articles)
-    .catch(error => {
-      window.dataStore.error = error;
-    });
+    .then(catchErrorInAnswer);
 }
 
 function performSearch(word) {
@@ -129,17 +130,11 @@ function ErrorWindow(text) {
 
 function App() {
   const { dataIsLoading, error } = window.dataStore;
-
-  if (error && error != '') {
-    return `
-    ${ErrorWindow(error)}
-  `;
-  }
-
   const content = dataIsLoading ? Preloader() : ResultArea(dataStore);
 
   return `
     ${GivenDataArea(dataStore)}
+  
     ${error && error !== '' ? ErrorWindow(error) : content}
   `;
 }
