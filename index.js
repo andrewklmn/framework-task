@@ -12,7 +12,7 @@ import preloaderImage from './img/preloader.gif';
 const NEWS_API_KEY = process.env.SERVICE_API_KEY;
 const REFRESH_DELAY_IN_MS = 1000 * 60 * 60;
 const NUMBER_OF_SHOWED_NEWS_ITEMS = 12;
-const NUMBER_OF_TOP_WORDS = 5;
+const NUMBER_OF_TOP_WORDS = 7;
 const defaultCountry = 'gb';
 const defaultWord = '';
 
@@ -26,6 +26,7 @@ window.dataStore = {
   articles: [],
   country: defaultCountry,
   searchWord: defaultWord,
+  filterWord: '',
   dataIsLoading: false,
   errors: null,
   lastReadAt: null,
@@ -34,6 +35,7 @@ window.dataStore = {
 window.renderApp = renderApp;
 window.performSearch = performSearch;
 window.validateData = validateAndLoadData;
+window.filterByKeyword = filterByKeyword;
 
 performSearch();
 
@@ -83,6 +85,8 @@ function performSearch(word) {
   window.dataStore.searchWord = word;
   window.dataStore.dataIsLoading = true;
   window.dataStore.error = null;
+  window.dataStore.filterWord = '';
+
   renderApp();
   setTimeout(() => {
     validateAndLoadData()
@@ -95,6 +99,11 @@ function performSearch(word) {
         window.renderApp();
       });
   }, 1000);
+}
+
+function filterByKeyword(word) {
+  window.dataStore.filterWord = word;
+  renderApp();
 }
 
 function GivenDataArea(dataStore) {
@@ -145,8 +154,22 @@ function Preloader() {
   `;
 }
 
-function NewsList({ articles, newsItemsToShow }) {
+function filterArticleByWord(article, word) {
+  const searchWord = word ? word.toLowerCase() : '';
+  if (
+    word == '' ||
+    (article.title && article.title.toLowerCase().includes(searchWord)) ||
+    (article.description && article.description.toLowerCase().includes(searchWord)) ||
+    (article.content && article.content.toLowerCase().includes(searchWord))
+  )
+    return true;
+
+  return false;
+}
+
+function NewsList({ articles, filterWord, newsItemsToShow }) {
   const list = articles
+    .filter(article => filterArticleByWord(article, filterWord))
     .splice(0, newsItemsToShow)
     .map(article => `${NewsItem(article)}`)
     .join('');
@@ -188,7 +211,7 @@ function TopWordsButtons({ articles, searchWord }) {
 
   return `
     <div class="${contentClass}">
-      Most common words in news:<br/>
+      Filter result by most common word:<br/>
       ${threeWord.map(word => `${KeyWordButton(word)}`).join('')}
     </div>
   `;
@@ -196,7 +219,7 @@ function TopWordsButtons({ articles, searchWord }) {
 
 function KeyWordButton(word) {
   return `
-    <input class="${keywordClass}" type="button" onclick="performSearch(this.value);" value="${word}"/>
+    <input class="${keywordClass}" type="button" onclick="filterByKeyword(this.value);" value="${word}"/>
   `;
 }
 
