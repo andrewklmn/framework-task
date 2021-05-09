@@ -1,22 +1,29 @@
-import { rawNewsData } from './fixtures';
+import { getTopThreeWords, isWordInArticle } from './utils';
 import { containerClass, newsItemClass, newsImageClass } from './style.css';
 
-const newsAPIkey = process.env.SERVICE_API_KEY;
+const NEWS_API_KEY = process.env.SERVICE_API_KEY;
 const NUMBER_OF_SHOWED_NEWS_ITEMS = 12;
-const notImportantWords = ['chars]', 'ahead'];
+const defaultCountry = 'ua';
+const defaultWord = 'Ukraine';
 
 if (module.hot) {
   module.hot.accept();
 }
 
 window.dataStore = {
-  news: rawNewsData,
+  newsAPIkey: NEWS_API_KEY,
   newsItemsToShow: NUMBER_OF_SHOWED_NEWS_ITEMS,
-  filterWord: '',
+  dataIsLoading: true,
+  country: defaultCountry,
+  filterWord: defaultWord,
+  articles: [],
 };
 
 window.renderApp = renderApp;
-renderApp();
+window.performSearch = performSearch;
+window.validateData = validateAndLoadData;
+
+performSearch(defaultWord);
 
 function renderApp() {
   document.querySelector('.root').innerHTML = `
@@ -24,7 +31,36 @@ function renderApp() {
   `;
 }
 
-function ControlPanel(dataStore) {
+function validateAndLoadData() {
+  const { defaultCountry, filterWord, newsAPIkey } = window.dataStore;
+  const topNewsLink = `https://newsapi.org/v2/top-headlines?country=${defaultCountry}&apiKey=${newsAPIkey}`;
+  let url;
+  if (!filterWord || filterWord === '') {
+    url = topNewsLink;
+  } else {
+    url = `https://newsapi.org/v2/everything?q=${encodeURI(filterWord)}&apiKey=${newsAPIkey}`;
+  }
+
+  return fetch(url)
+    .then(response => response.json())
+    .then(data => data.articles);
+  //.catch(error => {throw new Error(errot)});
+}
+
+function performSearch(word) {
+  window.dataStore.filterWord = word.trim();
+
+  validateAndLoadData()
+    .then(data => {
+      // eslint-disable-next-line no-console
+      console.log('DATA = ' + JSON.stringify(data));
+      window.dataStore.articles = data;
+    })
+    //.catch(error => console.log)
+    .finally(window.renderApp);
+}
+
+function GivenDataArea(dataStore) {
   return `
     ${SearchField(dataStore)}
     ${ResetSearchButton()}
@@ -47,25 +83,14 @@ function ResultArea(dataStore) {
 
 function App() {
   return `
-    ${ControlPanel(dataStore)}
+    ${GivenDataArea(dataStore)}
     ${ResultArea(dataStore)}
   `;
 }
 
-function isWordInArticle({ title, content }, searchWord) {
-  if (
-    searchWord == '' ||
-    content.toLowerCase().includes(searchWord.toLowerCase()) ||
-    title.toLowerCase().includes(searchWord.toLowerCase())
-  ) {
-    return true;
-  }
-  return false;
-}
-
-function NewsList({ news, newsItemsToShow, filterWord }) {
-  const list = news.articles
-    .filter(article => isWordInArticle(article, filterWord))
+function NewsList({ articles, newsItemsToShow, filterWord }) {
+  const list = articles
+    //.filter(article => isWordInArticle(article, filterWord))
     .splice(0, newsItemsToShow)
     .map(article => `${NewsItem(article)}`)
     .join('');
@@ -86,56 +111,18 @@ function NewsItem({ title, urlToImage, content, url }) {
   `;
 }
 
-function handleFilterChange({ value }) {
-  window.dataStore.filterWord = value;
-  window.renderApp();
-}
-
-window.handleFilterChange = handleFilterChange;
-
 function SearchField({ filterWord }) {
   return `
     Filtered by:
-    <input onchange="handleFilterChange(this);" value="${filterWord}" name="filter" placeholder="Enter keyword"/>
+    <input onchange="performSearch(this.value);" value="${filterWord}" name="filter" placeholder="Enter keyword"/>
   `;
 }
 
-function getTopThreeWords(text) {
-  let regex = '.*[a-zA-Z].*';
-  if (text.match(regex)) {
-    let wordMap = new Map();
-    text.split(' ').forEach(word => {
-      if (word) {
-        word = word.toLowerCase();
-        if (notImportantWords.includes(word) || word.length < 5) {
-          return;
-        }
-        if (wordMap.has(word)) {
-          let count = wordMap.get(word);
-          count++;
-          wordMap.set(word, count);
-        } else {
-          wordMap.set(word, 1);
-        }
-      }
-    });
-    const sortedWordMap = new Map([...wordMap.entries()].sort((a, b) => b[1] - a[1]));
-
-    let result = Array.from(sortedWordMap.keys()).filter((word, index) => index < 3);
-    result = result.map(res => {
-      res = res.replace(/[/.,]/g, '');
-      if (res !== '') {
-        return res;
-      }
-    });
-    return result.filter(res => res !== undefined);
-  } else {
-    return [];
+function TopThreeWordsButtons({ articles, filterWord }) {
+  if (!articles) {
+    return '';
   }
-}
-
-function TopThreeWordsButtons({ news, filterWord }) {
-  const wholeText = news.articles.reduce((acc, article) => {
+  const wholeText = articles.reduce((acc, article) => {
     const { content, title } = article;
     return (acc += `${content} ${title} `);
   }, '');
@@ -151,12 +138,12 @@ function TopThreeWordsButtons({ news, filterWord }) {
 
 function KeyWordButton(word) {
   return `
-    <input type="button" onclick="handleFilterChange(this);" value="${word}"/>
+    <input type="button" onclick="performSearch(this.value);" value="${word}"/>
   `;
 }
 
 function ResetSearchButton() {
   return `
-    <input type="button" onclick="handleFilterChange({value: ''});" value="Reset filter"/>
+    <input type="button" onclick="performSearch('');" value="Reset filter"/>
   `;
 }
