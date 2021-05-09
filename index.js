@@ -28,7 +28,6 @@ window.dataStore = {
   searchWord: defaultWord,
   dataIsLoading: false,
   errors: null,
-  cache: [],
   lastReadAt: null,
 };
 
@@ -44,37 +43,37 @@ function renderApp() {
   `;
 }
 
-function catchErrorInAnswer(data) {
+function catchErrorInAnswer(data, url) {
   if (data.status === 'error') {
-    window.dataStore.lastReadAt = null;
     return Promise.reject(data.message);
   }
-  window.dataStore.cache = [...data.articles];
+  localStorage.setItem(encodeURI(url), JSON.stringify(data.articles));
+  localStorage.setItem(encodeURI(url + '-lastReadAt'), Date.now());
   return data.articles;
 }
 
+function readArticlesData(url) {
+  const lastReadAt = localStorage.getItem(encodeURI(url + '-lastReadAt'));
+  if (lastReadAt && Date.now() - lastReadAt < REFRESH_DELAY_IN_MS) {
+    const storedArticles = JSON.parse(localStorage.getItem(encodeURI(url)));
+    return Promise.resolve([...storedArticles]);
+  } else {
+    return fetch(url)
+      .then(response => response.json())
+      .then(data => catchErrorInAnswer(data, url));
+  }
+}
+
 function validateAndLoadData() {
-  const { country, searchWord, newsAPIkey, lastReadAt, articles } = window.dataStore;
+  const { country, searchWord, newsAPIkey } = window.dataStore;
+
+  let url = `https://litos.kiev.ua/top_news_gate.php?country=${country}&apiKey=${newsAPIkey}`;
   if (!searchWord || searchWord === '') {
     window.dataStore.searchWord = '';
-    if (lastReadAt && Date.now() - lastReadAt < REFRESH_DELAY_IN_MS) {
-      return Promise.resolve([...window.dataStore.cache]);
-    } else {
-      window.dataStore.lastReadAt = Date.now();
-
-      return fetch(
-        `https://litos.kiev.ua/top_news_gate.php?country=${country}&apiKey=${newsAPIkey}`,
-      )
-        .then(response => response.json())
-        .then(catchErrorInAnswer);
-    }
+    return readArticlesData(url);
   }
-
-  return fetch(
-    `https://litos.kiev.ua/news_gate.php?q=${encodeURI(searchWord)}&apiKey=${newsAPIkey}`,
-  )
-    .then(response => response.json())
-    .then(catchErrorInAnswer);
+  url = `https://litos.kiev.ua/news_gate.php?q=${encodeURI(searchWord)}&apiKey=${newsAPIkey}`;
+  return readArticlesData(url);
 }
 
 function performSearch(word) {
