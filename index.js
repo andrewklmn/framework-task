@@ -1,10 +1,20 @@
-import { getTopThreeWords, isWordInArticle } from './utils';
-import { containerClass, newsItemClass, newsImageClass } from './style.css';
+import { getTopWords } from './utils';
+import {
+  containerClass,
+  newsItemClass,
+  newsImageClass,
+  keywordClass,
+  contentClass,
+} from './style.css';
+
+import preloaderImage from './img/preloader.gif';
 
 const NEWS_API_KEY = process.env.SERVICE_API_KEY;
+const REFRESH_DELAY_IN_MS = 1000 * 60 * 60;
 const NUMBER_OF_SHOWED_NEWS_ITEMS = 12;
-const defaultCountry = 'ua';
-const defaultWord = 'Ukraine';
+const NUMBER_OF_TOP_WORDS = 5;
+const defaultCountry = 'gb';
+const defaultWord = '';
 
 if (module.hot) {
   module.hot.accept();
@@ -13,17 +23,20 @@ if (module.hot) {
 window.dataStore = {
   newsAPIkey: NEWS_API_KEY,
   newsItemsToShow: NUMBER_OF_SHOWED_NEWS_ITEMS,
-  dataIsLoading: true,
-  country: defaultCountry,
-  filterWord: defaultWord,
   articles: [],
+  country: defaultCountry,
+  searchWord: defaultWord,
+  dataIsLoading: false,
+  errors: null,
+  cache: [],
+  lastReadAt: null,
 };
 
 window.renderApp = renderApp;
 window.performSearch = performSearch;
 window.validateData = validateAndLoadData;
 
-performSearch(defaultWord);
+performSearch();
 
 function renderApp() {
   document.querySelector('.root').innerHTML = `
@@ -32,65 +45,115 @@ function renderApp() {
 }
 
 function validateAndLoadData() {
-  const { defaultCountry, filterWord, newsAPIkey } = window.dataStore;
-  const topNewsLink = `https://newsapi.org/v2/top-headlines?country=${defaultCountry}&apiKey=${newsAPIkey}`;
+  const { country, searchWord, newsAPIkey, lastReadAt, articles } = window.dataStore;
+  const topNewsLink = `https://newsapi.org/v2/top-headlines?country=${country}&apiKey=${newsAPIkey}`;
+
   let url;
-  if (!filterWord || filterWord === '') {
+  if (!searchWord || searchWord === '') {
     url = topNewsLink;
-  } else {
-    url = `https://newsapi.org/v2/everything?q=${encodeURI(filterWord)}&apiKey=${newsAPIkey}`;
+    window.dataStore.searchWord = '';
+    if (lastReadAt && Date.now() - lastReadAt < REFRESH_DELAY_IN_MS) {
+      return Promise.resolve([...window.dataStore.cache]);
+    } else {
+      window.dataStore.lastReadAt = Date.now();
+      return fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          window.dataStore.cache = [...data.articles];
+          return data.articles;
+        })
+        .catch(error => {
+          window.dataStore.error = error;
+        });
+    }
   }
+
+  url = `https://newsapi.org/v2/everything?q=${encodeURI(searchWord)}&apiKey=${newsAPIkey}`;
 
   return fetch(url)
     .then(response => response.json())
-    .then(data => data.articles);
-  //.catch(error => {throw new Error(errot)});
+    .then(data => data.articles)
+    .catch(error => {
+      window.dataStore.error = error;
+    });
 }
 
 function performSearch(word) {
-  window.dataStore.filterWord = word.trim();
+  if (window.dataStore.dataIsLoading) return;
 
-  validateAndLoadData()
-    .then(data => {
-      // eslint-disable-next-line no-console
-      console.log('DATA = ' + JSON.stringify(data));
-      window.dataStore.articles = data;
-    })
-    //.catch(error => console.log)
-    .finally(window.renderApp);
+  window.dataStore.articles = [];
+  window.dataStore.searchWord = word;
+  window.dataStore.dataIsLoading = true;
+  window.dataStore.error = null;
+  renderApp();
+  setTimeout(() => {
+    validateAndLoadData()
+      .then(data => {
+        window.dataStore.articles = data;
+      })
+      .catch(error => (window.dataStore.error = error))
+      .finally(() => {
+        window.dataStore.dataIsLoading = false;
+        window.renderApp();
+      });
+  }, 1000);
 }
 
 function GivenDataArea(dataStore) {
   return `
-    ${SearchField(dataStore)}
-    ${ResetSearchButton()}
+    <div class="${contentClass}">
+      ${SearchField(dataStore)}
+      ${ResetSearchButton()}
+    </div>
   `;
 }
 
 function ResultArea(dataStore) {
   return `
-    ${TopThreeWordsButtons(dataStore)}
+    <div class="${containerClass}">
+      ${TopWordsButtons(dataStore)}
+    </div>
     <div class="${containerClass}">
       ${NewsList(dataStore)}
     </div>
   `;
 }
 
-// initial state
-// data loading state
-// result state
-// error state
-
-function App() {
+function ErrorWindow(text) {
   return `
-    ${GivenDataArea(dataStore)}
-    ${ResultArea(dataStore)}
+    <div class="${contentClass}" style="color: red;">
+      ${text}
+    </div>
   `;
 }
 
-function NewsList({ articles, newsItemsToShow, filterWord }) {
+function App() {
+  const { dataIsLoading, error } = window.dataStore;
+
+  if (error && error != '') {
+    return `
+    ${ErrorWindow(error)}
+  `;
+  }
+
+  const content = dataIsLoading ? Preloader() : ResultArea(dataStore);
+
+  return `
+    ${GivenDataArea(dataStore)}
+    ${error && error !== '' ? ErrorWindow(error) : content}
+  `;
+}
+
+function Preloader() {
+  return `
+    <div class="${contentClass}" style="padding-top: 50px;">
+      <img src=${preloaderImage} />
+    </div>    
+  `;
+}
+
+function NewsList({ articles, newsItemsToShow }) {
   const list = articles
-    //.filter(article => isWordInArticle(article, filterWord))
     .splice(0, newsItemsToShow)
     .map(article => `${NewsItem(article)}`)
     .join('');
@@ -100,50 +163,52 @@ function NewsList({ articles, newsItemsToShow, filterWord }) {
   `;
 }
 
-function NewsItem({ title, urlToImage, content, url }) {
+function NewsItem({ title, urlToImage, description, url }) {
   return `
     <div class="${newsItemClass}">
       <h3>${title}</h3>
       ${urlToImage ? `<img class="${newsImageClass}" src="${urlToImage}"/>` : ''}      
-      <p>${content}</p>
-      Source is here <a target="_blank" href="${url}">${url}</a>
+      <p>${description}</p>
+      <a target="_blank" href="${url}">Read more ... </a>
     </div>
   `;
 }
 
-function SearchField({ filterWord }) {
+function SearchField({ searchWord }) {
   return `
-    Filtered by:
-    <input onchange="performSearch(this.value);" value="${filterWord}" name="filter" placeholder="Enter keyword"/>
+    Search by:
+    <input onchange="performSearch(this.value);" value="${
+      searchWord ? searchWord : ''
+    }" placeholder="Enter keyword"/>
   `;
 }
 
-function TopThreeWordsButtons({ articles, filterWord }) {
+function TopWordsButtons({ articles, searchWord }) {
   if (!articles) {
     return '';
   }
   const wholeText = articles.reduce((acc, article) => {
-    const { content, title } = article;
-    return (acc += `${content} ${title} `);
+    const { description, title } = article;
+    return (acc += `${description} ${title} `);
   }, '');
-  const threeWord = getTopThreeWords(wholeText);
+  const threeWord = getTopWords(wholeText, NUMBER_OF_TOP_WORDS, searchWord);
 
   return `
-    <span>
-      Most common words in news:
+    <div class="${contentClass}">
+      Most common words in news:<br/>
       ${threeWord.map(word => `${KeyWordButton(word)}`).join('')}
-    </span>
+    </div>
   `;
 }
 
 function KeyWordButton(word) {
   return `
-    <input type="button" onclick="performSearch(this.value);" value="${word}"/>
+    <input class="${keywordClass}" type="button" onclick="performSearch(this.value);" value="${word}"/>
   `;
 }
 
 function ResetSearchButton() {
   return `
-    <input type="button" onclick="performSearch('');" value="Reset filter"/>
+    <input type="button" onclick="performSearch('');" value="Reset search"/>
   `;
 }

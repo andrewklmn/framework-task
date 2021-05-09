@@ -1,13 +1,31 @@
-const notImportantWords = ['chars]', 'ahead'];
+const notImportantWords = [
+  'chars]',
+  'ahead',
+  'after',
+  'before',
+  'again',
+  'could',
+  'might',
+  'will',
+  'would',
+  'must',
+  'shall',
+  'should',
+  'ought',
+];
 
-export function getTopThreeWords(text) {
-  let regex = '.*[a-zA-Z].*';
+export function getTopWords(text, numberOfWords, excludeWord = '') {
+  let regex = '.*[a-zA-Zа-яА-Я].*';
   if (text.match(regex)) {
     let wordMap = new Map();
     text.split(' ').forEach(word => {
       if (word) {
         word = word.toLowerCase();
-        if (notImportantWords.includes(word) || word.length < 5) {
+        if (
+          notImportantWords.includes(word) ||
+          word == excludeWord.toLowerCase() ||
+          word.length < 5
+        ) {
           return;
         }
         if (wordMap.has(word)) {
@@ -21,7 +39,7 @@ export function getTopThreeWords(text) {
     });
     const sortedWordMap = new Map([...wordMap.entries()].sort((a, b) => b[1] - a[1]));
 
-    let result = Array.from(sortedWordMap.keys()).filter((word, index) => index < 3);
+    let result = Array.from(sortedWordMap.keys()).filter((word, index) => index < numberOfWords);
     result = result.map(res => {
       res = res.replace(/[/.,]/g, '');
       if (res !== '') {
@@ -34,10 +52,10 @@ export function getTopThreeWords(text) {
   }
 }
 
-export function isWordInArticle({ title, content }, searchWord) {
+export function isWordInArticle({ title, description }, searchWord) {
   if (
     searchWord == '' ||
-    content.toLowerCase().includes(searchWord.toLowerCase()) ||
+    description.toLowerCase().includes(searchWord.toLowerCase()) ||
     title.toLowerCase().includes(searchWord.toLowerCase())
   ) {
     return true;

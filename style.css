@@ -17,3 +17,14 @@
 .newsImageClass {
   width: 300px;
 }
+
+.keywordClass {
+  color: blue;
+  border-radius: 20px;
+}
+
+.contentClass {
+  width: 100%;
+  text-align: center;
+  padding-bottom: 20px;
+}
