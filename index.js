@@ -179,6 +179,6 @@ function SearchField({ searchWord }) {
     Search by:
     <input onchange="performSearch(this.value);" value="${
       searchWord ? searchWord : ''
-    }" placeholder="Enter keyword"/>
+    }" placeholder="Enter word or phrase"/>
   `;
 }
