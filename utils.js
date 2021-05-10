@@ -45,9 +45,9 @@ export function getTopWords(text, numberOfWords, excludeWord = '') {
         if (
           notImportantWords.includes(word) ||
           word.trim() == '' ||
-          word.replace(/[0-9a-z\-]/g, '').length > 0 ||
+          word.replace(/[0-9a-zа-яїєіґ\-]/g, '').length > 0 ||
           word == excludeWord.toLowerCase() ||
-          word.length < 4
+          word.replace(/^[0-9a-zа-яїєіґ\-]/g, '').length < 5
         ) {
           return;
         }
