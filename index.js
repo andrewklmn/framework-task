@@ -1,20 +1,19 @@
-import { getTopWords, filterArticleByWord } from './utils';
 import {
-  containerClass,
-  newsItemClass,
-  newsImageClass,
-  keywordClass,
-  contentClass,
-} from './style.css';
+  NEWS_API_KEY,
+  REFRESH_DELAY_IN_MS,
+  NUMBER_OF_SHOWED_NEWS_ITEMS,
+  NUMBER_OF_TOP_WORDS,
+  defaultCountry,
+  defaultWord,
+} from './constants';
+
+import { ResetSearchButton, TopWordsButtons, RefreshButton } from './components/buttons';
+import { ErrorWindow } from './components/errorWindow';
+
+import { filterArticleByWord } from './utils';
+import { containerClass, newsItemClass, newsImageClass, contentClass } from './style.css';
 
 import preloaderImage from './img/preloader.gif';
-
-const NEWS_API_KEY = process.env.SERVICE_API_KEY;
-const REFRESH_DELAY_IN_MS = 1000 * 60 * 60;
-const NUMBER_OF_SHOWED_NEWS_ITEMS = 30;
-const NUMBER_OF_TOP_WORDS = 7;
-const defaultCountry = 'gb';
-const defaultWord = '';
 
 if (module.hot) {
   module.hot.accept();
@@ -37,6 +36,7 @@ window.performSearch = performSearch;
 window.validateData = validateAndLoadData;
 window.filterByKeyword = filterByKeyword;
 
+// start App with default search
 performSearch();
 
 function renderApp() {
@@ -55,11 +55,15 @@ function catchErrorInAnswer(data, url) {
 }
 
 function readArticlesData(url) {
+  /* load time of last reading from NewsAPI */
   const lastReadAt = localStorage.getItem(encodeURI(url + '-lastReadAt'));
+
   if (lastReadAt && Date.now() - lastReadAt < REFRESH_DELAY_IN_MS) {
+    /* load cached data from localStorage */
     const storedArticles = JSON.parse(localStorage.getItem(encodeURI(url)));
     return Promise.resolve([...storedArticles]);
   } else {
+    /* fetch new data from NewsAPI */
     return fetch(url)
       .then(response => response.json())
       .then(data => catchErrorInAnswer(data, url));
@@ -71,6 +75,7 @@ function validateAndLoadData() {
 
   let url = `https://litos.kiev.ua/top_news_gate.php?country=${country}&apiKey=${newsAPIkey}`;
   if (!searchWord || searchWord === '') {
+    // if no search word was added
     window.dataStore.searchWord = '';
     return readArticlesData(url);
   }
@@ -127,14 +132,6 @@ function ResultArea(dataStore) {
   `;
 }
 
-function ErrorWindow(text) {
-  return `
-    <div class="${contentClass}" style="color: red;">
-      ${text}
-    </div>
-  `;
-}
-
 function App() {
   const { dataIsLoading, error } = window.dataStore;
   const content = dataIsLoading ? Preloader() : ResultArea(dataStore);
@@ -183,41 +180,5 @@ function SearchField({ searchWord }) {
     <input onchange="performSearch(this.value);" value="${
       searchWord ? searchWord : ''
     }" placeholder="Enter keyword"/>
-  `;
-}
-
-function TopWordsButtons({ articles, searchWord }) {
-  if (!articles) {
-    return '';
-  }
-  const wholeText = articles.reduce((acc, article) => {
-    const { description, title } = article;
-    return (acc += `${description} ${title} `);
-  }, '');
-  const threeWord = getTopWords(wholeText, NUMBER_OF_TOP_WORDS, searchWord);
-
-  return `
-    <div class="${contentClass}">
-      Filter result by most common word:<br/>
-      ${threeWord.map(word => `${KeyWordButton(word)}`).join('')}
-    </div>
-  `;
-}
-
-function KeyWordButton(word) {
-  return `
-    <input class="${keywordClass}" type="button" onclick="filterByKeyword(this.value);" value="${word}"/>
-  `;
-}
-
-function RefreshButton() {
-  return `
-    <input type="button" onclick="performSearch(window.dataStore.searchWord);" value="Refresh"/>
-  `;
-}
-
-function ResetSearchButton() {
-  return `
-    <input type="button" onclick="performSearch('');" value="Reset search"/>
   `;
 }
