@@ -13,6 +13,7 @@ const notImportantWords = [
   'should',
   'ought',
   'null',
+  'there',
 ];
 
 export function filterArticleByWord(article, word) {
@@ -47,7 +48,7 @@ export function getTopWords(text, numberOfWords, excludeWord = '') {
           word.trim() == '' ||
           word.replace(/[0-9a-zа-яїєіґ\-]/g, '').length > 0 ||
           word == excludeWord.toLowerCase() ||
-          word.replace(/^[0-9a-zа-яїєіґ\-]/g, '').length < 5
+          word.replace(/^[\W\-]/g, '').length < 6
         ) {
           return;
         }
@@ -90,7 +91,7 @@ export function removeArticleMakerSignFromTitle(title) {
 export function isWordInArticle({ title, content, description }, searchWord) {
   if (
     searchWord == '' ||
-    (description && description.toLowerCase().includes(searchWord.toLowerCase())) ||
+    //(description && description.toLowerCase().includes(searchWord.toLowerCase())) ||
     (content && content.toLowerCase().includes(searchWord.toLowerCase())) ||
     (title &&
       removeArticleMakerSignFromTitle(title).toLowerCase().includes(searchWord.toLowerCase()))
