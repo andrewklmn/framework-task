@@ -45,6 +45,19 @@ function renderApp() {
   `;
 }
 
+function prepareUrlForFetch(url, data) {
+  let resultUrl = url;
+  if (!data) return url;
+  let params = Object.entries(data);
+  if (params && params.length) {
+    resultUrl = resultUrl + '?';
+    params = params.map(param => {
+      return param[0] + '=' + encodeURI(param[1]);
+    });
+  }
+  return resultUrl + params.join('&');
+}
+
 function catchErrorInAnswer(data, url) {
   if (data.status === 'error') {
     return Promise.reject(data.message);
@@ -73,14 +86,26 @@ function readArticlesData(url) {
 function validateAndLoadData() {
   const { country, searchWord, newsAPIkey } = window.dataStore;
 
-  let url = `https://litos.kiev.ua/top_news_gate.php?country=${country}&apiKey=${newsAPIkey}`;
+  const url = `https://litos.kiev.ua/api_gate.php`;
+  let params = {
+    url: 'https://newsapi.org/v2/top-headlines',
+    country,
+    apiKey: newsAPIkey,
+  };
+
   if (!searchWord || searchWord === '') {
     // if no search word was added
     window.dataStore.searchWord = '';
-    return readArticlesData(url);
+    return readArticlesData(prepareUrlForFetch(url, params));
   }
-  url = `https://litos.kiev.ua/news_gate.php?q=${encodeURI(searchWord)}&apiKey=${newsAPIkey}`;
-  return readArticlesData(url);
+
+  params = {
+    url: 'https://newsapi.org/v2/everything',
+    q: searchWord,
+    sortBy: 'popularity',
+    apiKey: newsAPIkey,
+  };
+  return readArticlesData(prepareUrlForFetch(url, params));
 }
 
 function performSearch(word) {
