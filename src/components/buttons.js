@@ -1,9 +1,6 @@
 import { NUMBER_OF_TOP_WORDS } from '../constants';
 import { getTopWords, removeArticleMakerSignFromTitle } from '../utils';
 import { keywordClass, contentClass } from '../style.css';
-import filterByKeyword from '../data/filterByKeyword';
-
-window.filterByKeyword = filterByKeyword;
 
 export function ResetSearchButton() {
   return `

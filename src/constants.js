@@ -1,6 +1,6 @@
-const GATE_URL = `https://litos.kiev.ua/api_gate.php`;
-const URL_FOR_TOP_NEWS = 'https://newsapi.org/v2/top-headlines';
-const URL_FOR_SEARCH_IN_NEWS = 'https://newsapi.org/v2/everything';
+export const GATE_URL = `https://litos.kiev.ua/api_gate.php`;
+export const URL_FOR_TOP_NEWS = 'https://newsapi.org/v2/top-headlines';
+export const URL_FOR_SEARCH_IN_NEWS = 'https://newsapi.org/v2/everything';
 
 export const NEWS_API_KEY = process.env.SERVICE_API_KEY;
 export const REFRESH_DELAY_IN_MS = 1000 * 60 * 60;

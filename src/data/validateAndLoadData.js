@@ -1,4 +1,4 @@
-import { GATE_URL, URL_FOR_SEARCH_IN_NEWS, URL_FOR_TOP_NEWS } from './../constants';
+import { GATE_URL, URL_FOR_SEARCH_IN_NEWS, URL_FOR_TOP_NEWS } from '../constants';
 import { prepareUrlForFetch } from './../utils';
 import readArticlesData from './readArticleData';
 
