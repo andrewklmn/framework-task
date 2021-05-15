@@ -2,7 +2,9 @@
 /** @jsxFrag createFragment */
 import { createElement, createFragment } from '../framework/element';
 
-export default function SearchField({ searchWord }) {
+export default function SearchField({ dataStore }) {
+  const { searchWord } = dataStore;
+
   return (
     <>
       <span>Search by:</span>
