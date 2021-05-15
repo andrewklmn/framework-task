@@ -1,26 +1,39 @@
+/** @jsx createElement */
+/** @jsxFrag createFragment */
+import { createElement, createFragment } from '../framework/element';
+
 import { NUMBER_OF_TOP_WORDS } from '../constants';
 import { getTopWords, removeArticleMakerSignFromTitle } from '../utils';
 import { keywordClass, contentClass } from '../style.css';
 
 export function ResetSearchButton() {
-  return `
-    <input type="button" onclick="performSearch('');" value="Reset search"/>
-  `;
+  return <input type="button" onclick={() => performSearch('')} value="Reset search" />;
 }
 
-export function KeyWordButton(word) {
-  return `
-    <input class="${keywordClass}" type="button" onclick="filterByKeyword(this.value);" value="${word}"/>
-  `;
+export function KeyWordButton(props) {
+  const { word } = props;
+  return (
+    <input
+      class={keywordClass}
+      type="button"
+      onclick={e => window.filterByKeyword(e.target.value)}
+      value={word}
+    />
+  );
 }
 
 export function RefreshButton() {
-  return `
-    <input type="button" onclick="performSearch(window.dataStore.searchWord);" value="Refresh"/>
-  `;
+  return (
+    <input
+      type="button"
+      onclick={() => performSearch(window.dataStore.searchWord)}
+      value="Refresh"
+    />
+  );
 }
 
-export function TopWordsButtons({ articles, searchWord }) {
+export function TopWordsButtons({ dataStore }) {
+  const { articles, searchWord } = dataStore;
   if (!articles) {
     return '';
   }
@@ -28,12 +41,15 @@ export function TopWordsButtons({ articles, searchWord }) {
     const { content, description, title } = article;
     return (acc += `${description} ${content} ${removeArticleMakerSignFromTitle(title)} `);
   }, '');
-  const threeWord = getTopWords(wholeText, NUMBER_OF_TOP_WORDS, searchWord);
+  const fewKeyWord = getTopWords(wholeText, NUMBER_OF_TOP_WORDS, searchWord);
 
-  return `
-    <div class="${contentClass}">
-      Filter result by most common word:<br/>
-      ${threeWord.map(word => `${KeyWordButton(word)}`).join('')}
+  return (
+    <div className={contentClass}>
+      Filter result by most common word:
+      <br />
+      {fewKeyWord.map(word => (
+        <KeyWordButton word={word} />
+      ))}
     </div>
-  `;
+  );
 }

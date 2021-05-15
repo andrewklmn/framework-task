@@ -5,6 +5,7 @@
  * @param {Node[]} children - child elements
  * @returns {DocumentFragment|Element}
  */
+
 export const createElement = (tag, props, ...children) => {
   if (typeof tag === 'function') {
     /*
