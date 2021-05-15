@@ -1,7 +1,4 @@
-const GATE_URL = `https://litos.kiev.ua/api_gate.php`;
-const URL_FOR_TOP_NEWS = 'https://newsapi.org/v2/top-headlines';
-const URL_FOR_SEARCH_IN_NEWS = 'https://newsapi.org/v2/everything';
-
+import { GATE_URL, URL_FOR_SEARCH_IN_NEWS, URL_FOR_TOP_NEWS } from './../constants';
 import { prepareUrlForFetch } from './../utils';
 import readArticlesData from './readArticleData';
 
