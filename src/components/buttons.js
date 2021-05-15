@@ -6,6 +6,9 @@ import { NUMBER_OF_TOP_WORDS } from '../constants';
 import { getTopWords, removeArticleMakerSignFromTitle } from '../utils';
 import { keywordClass, contentClass } from '../style.css';
 
+import performSearch from '../data/performSearch';
+import filterByKeyword from '/./data/filterByKeyword';
+
 export function ResetSearchButton() {
   return <input type="button" onclick={() => performSearch('')} value="Reset search" />;
 }
@@ -16,7 +19,7 @@ export function KeyWordButton(props) {
     <input
       class={keywordClass}
       type="button"
-      onclick={e => window.filterByKeyword(e.target.value)}
+      onclick={e => filterByKeyword(e.target.value)}
       value={word}
     />
   );
