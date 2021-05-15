@@ -3,11 +3,11 @@ import SearchField from './../components/SearchFiled';
 import { ResetSearchButton, RefreshButton } from './../components/buttons';
 
 export default function GivenDataArea(dataStore) {
-  return `
+  return (
     <div class="${contentClass}">
-      ${SearchField(dataStore)}
-      ${RefreshButton()}
-      ${ResetSearchButton()}
+      <SearchField dataStore={dataStore} />
+      <RefreshButton />
+      <ResetSearchButton />
     </div>
-  `;
+  );
 }

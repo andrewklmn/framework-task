@@ -7,9 +7,10 @@ export default function App(dataStore) {
   const { dataIsLoading, error } = dataStore;
   const content = dataIsLoading ? Preloader() : ResultArea(dataStore);
 
-  return `
-    ${GivenDataArea(dataStore)}
-  
-    ${error && error !== '' ? ErrorWindow(error) : content}
-  `;
+  return (
+    <>
+      <GivenDataArea dataStore={dataStore} />
+      {error && error !== '' ? <ErrorWindow error={error} /> : content}
+    </>
+  );
 }
