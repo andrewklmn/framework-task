@@ -1,4 +1,4 @@
-import containerClass from './../style.css';
+import { containerClass } from './../style.css';
 import { TopWordsButtons } from './../components/buttons';
 import NewsList from './../components/NewsList';
 
