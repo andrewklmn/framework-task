@@ -10,7 +10,7 @@ export default function GivenDataArea() {
   const { dataStore } = window;
 
   return (
-    <div class={contentClass}>
+    <div className={contentClass} attr="attr">
       <SearchField dataStore={dataStore} />
       <RefreshButton />
       <ResetSearchButton />
