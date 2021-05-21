@@ -100,3 +100,16 @@ export function isWordInArticle({ title, content, description }, searchWord) {
   }
   return false;
 }
+
+export function prepareUrlForFetch(url, data) {
+  let resultUrl = url;
+  if (!data) return url;
+  let params = Object.entries(data);
+  if (params && params.length) {
+    resultUrl = resultUrl + '?';
+    params = params.map(param => {
+      return param[0] + '=' + encodeURI(param[1]);
+    });
+  }
+  return resultUrl + params.join('&');
+}

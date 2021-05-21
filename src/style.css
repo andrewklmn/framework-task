@@ -1,9 +1,15 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
 .containerClass {
   display: flex;
   flex-direction: row;
   justify-content: center;
   flex-wrap: wrap;
   gap: 40px;
+  align-items: center;
 }
 
 .newsItemClass {
@@ -27,4 +33,5 @@
   width: 100%;
   text-align: center;
   padding-bottom: 20px;
+  text-align: center;
 }
