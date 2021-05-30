@@ -1,4 +1,5 @@
 import { REFRESH_DELAY_IN_MS } from './../constants';
+import newLoadedDataHandler from './newLoadedDataHandler';
 
 export default function readArticlesData(url) {
   /* load time of last reading from NewsAPI */
@@ -10,6 +11,8 @@ export default function readArticlesData(url) {
     return Promise.resolve([...storedArticles]);
   } else {
     /* fetch new data from NewsAPI */
-    return fetch(url);
+    return fetch(url)
+      .then(response => response.json())
+      .then(data => newLoadedDataHandler(data, url));
   }
 }

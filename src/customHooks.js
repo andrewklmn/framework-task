@@ -35,11 +35,10 @@ export const useNews = () => {
       };
     }
     readArticlesData(prepareUrlForFetch(GATE_URL, params))
-      .then(response => response.json())
-      .then(data => {
+      .then(articles => {
         setError(null);
         setFilterWord('');
-        setArticles(data.articles);
+        setArticles(articles);
       })
       .catch(setError)
       .finally(() => {
