@@ -17,6 +17,7 @@ export default function App() {
     articles,
     filterWord,
     setFilterWord,
+    setDataIsLoading,
   } = useNews();
 
   const content = dataIsLoading ? (
@@ -36,6 +37,7 @@ export default function App() {
         setFilterWord={setFilterWord}
         searchWord={searchWord}
         setSearchWord={setSearchWord}
+        setDataIsLoading={setDataIsLoading}
       />
       {error && error !== '' ? <ErrorWindow error={error} /> : content}
     </>

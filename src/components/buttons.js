@@ -10,8 +10,21 @@ import performSearch from '../data/performSearch';
 import filterByKeyword from '/./data/filterByKeyword';
 
 export function ResetSearchButton(props) {
-  const { setSearchWord } = props;
-  return <input type="button" onclick={() => setSearchWord('')} value="Reset search" />;
+  const { searchWord, setSearchWord, filterWord, setFilterWord, setDataIsLoading } = props;
+
+  const handleClick = () => {
+    if (searchWord !== '') {
+      setDataIsLoading(true);
+      setFilterWord('');
+      setSearchWord('');
+    }
+
+    if (filterWord !== '') {
+      setFilterWord('');
+    }
+  };
+
+  return <input type="button" onclick={handleClick} value="Reset search" />;
 }
 
 export function KeyWordButton(props) {
@@ -27,8 +40,13 @@ export function KeyWordButton(props) {
 }
 
 export function RefreshButton(props) {
-  const { searchWord, setSearchWord } = props;
-  return <input type="button" onclick={() => setSearchWord(searchWord)} value="Refresh" />;
+  const { searchWord, setSearchWord, setFilterWord } = props;
+  const handleClick = () => {
+    setFilterWord('');
+    setSearchWord(searchWord);
+  };
+
+  return <input type="button" onclick={handleClick} value="Refresh" />;
 }
 
 export function TopWordsButtons(props) {

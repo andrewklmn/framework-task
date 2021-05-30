@@ -20,25 +20,31 @@ export const useNews = () => {
   const [lastReadAt, setLastReadAt] = useState(null);
 
   useEffect(() => {
+    let params = {
+      url: URL_FOR_TOP_NEWS,
+      country: defaultCountry,
+      apiKey: NEWS_API_KEY,
+    };
+
     if (searchWord && !searchWord == '') {
-      // perform read articles by search word
-      // console.log('============= LOAD BY SEARCH WORD ===============');
-    } else {
-      // perform read default articles
-      readArticlesData(
-        prepareUrlForFetch(GATE_URL, {
-          url: URL_FOR_TOP_NEWS,
-          country: defaultCountry,
-          apiKey: NEWS_API_KEY,
-        }),
-      )
-        .then(response => response.json())
-        .then(data => {
-          setArticles(data.articles);
-        })
-        .catch(setError)
-        .finally(() => setDataIsLoading(false));
+      params = {
+        url: URL_FOR_SEARCH_IN_NEWS,
+        q: searchWord,
+        sortBy: 'popularity',
+        apiKey: NEWS_API_KEY,
+      };
     }
+    readArticlesData(prepareUrlForFetch(GATE_URL, params))
+      .then(response => response.json())
+      .then(data => {
+        setError(null);
+        setFilterWord('');
+        setArticles(data.articles);
+      })
+      .catch(setError)
+      .finally(() => {
+        setDataIsLoading(false);
+      });
   }, [searchWord]);
 
   return {
