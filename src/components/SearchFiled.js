@@ -1,7 +1,6 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
 import { createElement, createFragment } from '../framework/element';
-import performSearch from '../data/performSearch';
 
 export default function SearchField(props) {
   const { searchWord, setSearchWord, setDataIsLoading } = props;
