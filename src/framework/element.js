@@ -5,20 +5,22 @@
  * @param {Node[]} children - child elements
  * @returns {DocumentFragment|Element}
  */
+/** @jsx createElement */
+/*** @jsxFrag createFragment */
+import { createFunctionElement } from './hooks';
+import { isFunction } from '../utils';
 
 export const createElement = (tag, props, ...children) => {
-  if (typeof tag === 'function') {
+  if (isFunction(tag)) {
     /*
       Passing children as the 2nd argument is required as jsx transformer puts component functions
       and regular tags in wrapper functions that expect children as the 2nd param
      */
-    return tag({ ...props, children }, children);
+    return createFunctionElement(tag, props, children);
   }
   const element = tag === '' ? new DocumentFragment() : document.createElement(tag);
   Object.entries(props || {}).forEach(([name, value]) => {
-    if (name == 'className') {
-      element.className = value;
-    } else if (name.startsWith('on') && name.toLowerCase() in window) {
+    if (name.startsWith('on') && name.toLowerCase() in window) {
       element.addEventListener(
         name.toLowerCase().substr(2),
         /** @type {Function} */
