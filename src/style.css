@@ -24,6 +24,11 @@ body {
   width: 300px;
 }
 
+.activeKeywordClass {
+  color: red;
+  border-radius: 20px;
+}
+
 .keywordClass {
   color: blue;
   border-radius: 20px;

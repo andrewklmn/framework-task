@@ -4,9 +4,7 @@ import { createElement, createFragment } from '../framework/element';
 
 import { NUMBER_OF_TOP_WORDS } from '../constants';
 import { getTopWords, removeArticleMakerSignFromTitle } from '../utils';
-import { keywordClass, contentClass } from '../style.css';
-
-import filterByKeyword from '/./data/filterByKeyword';
+import { activeKeywordClass, keywordClass, contentClass } from '../style.css';
 
 export function ResetSearchButton(props) {
   const { searchWord, setSearchWord, filterWord, setFilterWord, setDataIsLoading } = props;
@@ -27,10 +25,10 @@ export function ResetSearchButton(props) {
 }
 
 export function KeyWordButton(props) {
-  const { word, setFilterWord } = props;
+  const { word, active, setFilterWord } = props;
   return (
     <input
-      class={keywordClass}
+      class={active ? activeKeywordClass : keywordClass}
       type="button"
       onclick={e => setFilterWord(e.target.value)}
       value={word}
@@ -49,7 +47,7 @@ export function RefreshButton(props) {
 }
 
 export function TopWordsButtons(props) {
-  const { articles, searchWord, setFilterWord } = props;
+  const { articles, searchWord, filterWord, setFilterWord } = props;
   if (!articles) {
     return '';
   }
@@ -64,7 +62,7 @@ export function TopWordsButtons(props) {
       Filter result by most common word:
       <br />
       {fewKeyWord.map(word => (
-        <KeyWordButton word={word} setFilterWord={setFilterWord} />
+        <KeyWordButton active={word === filterWord} word={word} setFilterWord={setFilterWord} />
       ))}
     </div>
   );

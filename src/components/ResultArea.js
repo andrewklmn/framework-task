@@ -14,6 +14,7 @@ export default function ResultArea(props) {
         <TopWordsButtons
           articles={articles}
           searchWord={searchWord}
+          filterWord={filterWord}
           setFilterWord={setFilterWord}
         />
       </div>

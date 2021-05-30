@@ -5,6 +5,7 @@
   "main": "src/index.html",
   "scripts": {
     "start": "parcel src/index.html",
+    "start-dev": "NODE_ENV=development parcel src/index.html",
     "lint:js": "npx eslint --cache **/*.js",
     "lint:js:fix": "npm run lint:js -- --fix",
     "prettify": "npx prettier --write **/*.{js,css,md,html}",
