@@ -1,4 +1,4 @@
-import renderApp from './../framework/renderApp';
+import { render } from './../framework';
 import { validateAndLoadData } from './validateAndLoadData';
 
 export default function performSearch(word) {
@@ -10,7 +10,7 @@ export default function performSearch(word) {
   window.dataStore.error = null;
   window.dataStore.filterWord = '';
 
-  renderApp();
+  render();
   setTimeout(() => {
     validateAndLoadData()
       .then(data => {
@@ -19,7 +19,7 @@ export default function performSearch(word) {
       .catch(error => (window.dataStore.error = error))
       .finally(() => {
         window.dataStore.dataIsLoading = false;
-        renderApp();
+        render();
       });
   }, 1000);
 }

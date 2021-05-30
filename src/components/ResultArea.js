@@ -6,14 +6,19 @@ import { containerClass } from './../style.css';
 import { TopWordsButtons } from './../components/buttons';
 import NewsList from './../components/NewsList';
 
-export default function ResultArea({ dataStore }) {
+export default function ResultArea(props) {
+  const { articles, searchWord, filterWord, setFilterWord } = props;
   return (
     <>
       <div class={containerClass}>
-        <TopWordsButtons dataStore={dataStore} />
+        <TopWordsButtons
+          articles={articles}
+          searchWord={searchWord}
+          setFilterWord={setFilterWord}
+        />
       </div>
       <div class={containerClass}>
-        <NewsList dataStore={dataStore} />
+        <NewsList articles={articles} filterWord={filterWord} />
       </div>
     </>
   );

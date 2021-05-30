@@ -4,12 +4,13 @@ import { createElement, createFragment } from '../framework/element';
 
 import NewsItem from './NewsItem';
 import { filterArticleByWord } from './../utils';
+import { NUMBER_OF_SHOWED_NEWS_ITEMS } from './../constants';
 
-export default function NewsList({ dataStore }) {
-  const { articles, filterWord, newsItemsToShow } = dataStore;
+export default function NewsList(props) {
+  const { articles, filterWord } = props;
   const list = articles
     .filter(article => filterArticleByWord(article, filterWord))
-    .splice(0, newsItemsToShow);
+    .splice(0, NUMBER_OF_SHOWED_NEWS_ITEMS);
 
   return (
     <>

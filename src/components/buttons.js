@@ -9,34 +9,30 @@ import { keywordClass, contentClass } from '../style.css';
 import performSearch from '../data/performSearch';
 import filterByKeyword from '/./data/filterByKeyword';
 
-export function ResetSearchButton() {
-  return <input type="button" onclick={() => performSearch('')} value="Reset search" />;
+export function ResetSearchButton(props) {
+  const { setSearchWord } = props;
+  return <input type="button" onclick={() => setSearchWord('')} value="Reset search" />;
 }
 
 export function KeyWordButton(props) {
-  const { word } = props;
+  const { word, setFilterWord } = props;
   return (
     <input
       class={keywordClass}
       type="button"
-      onclick={e => filterByKeyword(e.target.value)}
+      onclick={e => setFilterWord(e.target.value)}
       value={word}
     />
   );
 }
 
-export function RefreshButton() {
-  return (
-    <input
-      type="button"
-      onclick={() => performSearch(window.dataStore.searchWord)}
-      value="Refresh"
-    />
-  );
+export function RefreshButton(props) {
+  const { searchWord, setSearchWord } = props;
+  return <input type="button" onclick={() => setSearchWord(searchWord)} value="Refresh" />;
 }
 
-export function TopWordsButtons({ dataStore }) {
-  const { articles, searchWord } = dataStore;
+export function TopWordsButtons(props) {
+  const { articles, searchWord, setFilterWord } = props;
   if (!articles) {
     return '';
   }
@@ -51,7 +47,7 @@ export function TopWordsButtons({ dataStore }) {
       Filter result by most common word:
       <br />
       {fewKeyWord.map(word => (
-        <KeyWordButton word={word} />
+        <KeyWordButton word={word} setFilterWord={setFilterWord} />
       ))}
     </div>
   );

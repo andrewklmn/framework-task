@@ -16,6 +16,8 @@ const notImportantWords = [
   'there',
 ];
 
+export const isFunction = func => typeof func === 'function';
+
 export function filterArticleByWord(article, word) {
   const searchWord = word ? word.toLowerCase() : '';
   if (

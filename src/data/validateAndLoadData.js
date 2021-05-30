@@ -2,9 +2,7 @@ import { GATE_URL, URL_FOR_SEARCH_IN_NEWS, URL_FOR_TOP_NEWS } from '../constants
 import { prepareUrlForFetch } from './../utils';
 import readArticlesData from './readArticleData';
 
-export function validateAndLoadData() {
-  const { country, searchWord, newsAPIkey } = window.dataStore;
-
+export function validateAndLoadData({ country, searchWord, newsAPIkey }) {
   if (!searchWord || searchWord === '') {
     // if no search word was added
     window.dataStore.searchWord = '';
