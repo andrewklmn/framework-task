@@ -20,17 +20,6 @@ export default function App() {
     setDataIsLoading,
   } = useNews();
 
-  const content = dataIsLoading ? (
-    Preloader()
-  ) : (
-    <ResultArea
-      articles={articles}
-      searchWord={searchWord}
-      filterWord={filterWord}
-      setFilterWord={setFilterWord}
-    />
-  );
-
   return (
     <>
       <GivenDataArea
@@ -39,7 +28,18 @@ export default function App() {
         setSearchWord={setSearchWord}
         setDataIsLoading={setDataIsLoading}
       />
-      {error && error !== '' ? <ErrorWindow error={error} /> : content}
+      {error && error !== '' ? (
+        <ErrorWindow error={error} />
+      ) : dataIsLoading ? (
+        <Preloader />
+      ) : (
+        <ResultArea
+          articles={articles}
+          searchWord={searchWord}
+          filterWord={filterWord}
+          setFilterWord={setFilterWord}
+        />
+      )}
     </>
   );
 }
