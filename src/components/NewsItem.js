@@ -1,6 +1,4 @@
-/** @jsx createElement */
-/** @jsxFrag createFragment */
-import { createElement, createFragment } from '../framework/element';
+import React from 'react';
 
 import { newsItemClass, newsImageClass } from '../style.css';
 

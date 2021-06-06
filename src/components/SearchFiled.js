@@ -1,6 +1,5 @@
-/** @jsx createElement */
-/** @jsxFrag createFragment */
-import { createElement, createFragment } from '../framework/element';
+import React from 'react';
+
 import { useAppContext, useSettersContext } from '../context';
 
 export default function SearchField() {

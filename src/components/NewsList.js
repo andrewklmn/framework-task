@@ -1,6 +1,5 @@
-/** @jsx createElement */
-/** @jsxFrag createFragment */
-import { createElement, createFragment } from '../framework/element';
+import React from 'react';
+
 import { useArticlesContext } from '../context';
 
 import NewsItem from './NewsItem';

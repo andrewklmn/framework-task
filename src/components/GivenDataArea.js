@@ -1,6 +1,4 @@
-/** @jsx createElement */
-/** @jsxFrag createFragment */
-import { createElement, createFragment } from '../framework';
+import React from 'react';
 
 import { contentClass } from './../style.css';
 import SearchField from './../components/SearchFiled';

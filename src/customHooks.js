@@ -1,4 +1,4 @@
-import { useEffect, useState } from './framework';
+import { useEffect, useState } from 'react';
 
 import {
   NEWS_API_KEY,

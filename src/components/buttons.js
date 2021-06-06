@@ -1,6 +1,5 @@
-/** @jsx createElement */
-/** @jsxFrag createFragment */
-import { createElement, createFragment } from '../framework/element';
+import React from 'react';
+
 import { useAppContext, useArticlesContext, useSettersContext } from '../context';
 
 import { NUMBER_OF_TOP_WORDS } from '../constants';
