@@ -1,6 +1,7 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
 import { createElement, createFragment } from '../framework/element';
+import { useAppContext, useArticlesContext } from '../context';
 
 import { NUMBER_OF_TOP_WORDS } from '../constants';
 import { getTopWords, removeArticleMakerSignFromTitle } from '../utils';
@@ -47,7 +48,10 @@ export function RefreshButton(props) {
 }
 
 export function TopWordsButtons(props) {
-  const { articles, searchWord, filterWord, setFilterWord } = props;
+  const { filterWord, setFilterWord } = props;
+  const searchWord = useAppContext();
+  const articles = useArticlesContext();
+
   if (!articles) {
     return '';
   }

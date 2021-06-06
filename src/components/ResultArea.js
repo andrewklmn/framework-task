@@ -7,19 +7,15 @@ import { TopWordsButtons } from './../components/buttons';
 import NewsList from './../components/NewsList';
 
 export default function ResultArea(props) {
-  const { articles, searchWord, filterWord, setFilterWord } = props;
+  const { filterWord, setFilterWord } = props;
+
   return (
     <>
       <div class={containerClass}>
-        <TopWordsButtons
-          articles={articles}
-          searchWord={searchWord}
-          filterWord={filterWord}
-          setFilterWord={setFilterWord}
-        />
+        <TopWordsButtons filterWord={filterWord} setFilterWord={setFilterWord} />
       </div>
       <div class={containerClass}>
-        <NewsList articles={articles} filterWord={filterWord} />
+        <NewsList filterWord={filterWord} />
       </div>
     </>
   );

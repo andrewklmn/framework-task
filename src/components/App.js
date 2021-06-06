@@ -2,6 +2,7 @@
 /** @jsxFrag createFragment */
 import { createElement, createFragment } from '../framework';
 import { useNews } from '../customHooks';
+import { AppContext, ArticlesContext } from '../context';
 
 import ErrorWindow from './ErrorWindow';
 import GivenDataArea from './GivenDataArea';
@@ -22,24 +23,22 @@ export default function App() {
 
   return (
     <>
-      <GivenDataArea
-        setFilterWord={setFilterWord}
-        searchWord={searchWord}
-        setSearchWord={setSearchWord}
-        setDataIsLoading={setDataIsLoading}
-      />
-      {error && error !== '' ? (
-        <ErrorWindow error={error} />
-      ) : dataIsLoading ? (
-        <Preloader />
-      ) : (
-        <ResultArea
-          articles={articles}
-          searchWord={searchWord}
-          filterWord={filterWord}
-          setFilterWord={setFilterWord}
-        />
-      )}
+      <AppContext.Provider value={searchWord}>
+        <ArticlesContext.Provider value={articles}>
+          <GivenDataArea
+            setFilterWord={setFilterWord}
+            setSearchWord={setSearchWord}
+            setDataIsLoading={setDataIsLoading}
+          />
+          {error && error !== '' ? (
+            <ErrorWindow error={error} />
+          ) : dataIsLoading ? (
+            <Preloader />
+          ) : (
+            <ResultArea filterWord={filterWord} setFilterWord={setFilterWord} />
+          )}
+        </ArticlesContext.Provider>
+      </AppContext.Provider>
     </>
   );
 }
