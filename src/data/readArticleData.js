@@ -1,6 +1,5 @@
 import { REFRESH_DELAY_IN_MS } from './../constants';
-
-import checkIfErrorExistsInAnswer from './checkIfErrorExistsInAnswer';
+import newLoadedDataHandler from './newLoadedDataHandler';
 
 export default function readArticlesData(url) {
   /* load time of last reading from NewsAPI */
@@ -14,6 +13,6 @@ export default function readArticlesData(url) {
     /* fetch new data from NewsAPI */
     return fetch(url)
       .then(response => response.json())
-      .then(data => checkIfErrorExistsInAnswer(data, url));
+      .then(data => newLoadedDataHandler(data, url));
   }
 }

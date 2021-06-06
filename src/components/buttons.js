@@ -1,42 +1,60 @@
-/** @jsx createElement */
-/** @jsxFrag createFragment */
-import { createElement, createFragment } from '../framework/element';
+import React from 'react';
+
+import { useAppContext, useArticlesContext, useSettersContext } from '../context';
 
 import { NUMBER_OF_TOP_WORDS } from '../constants';
 import { getTopWords, removeArticleMakerSignFromTitle } from '../utils';
-import { keywordClass, contentClass } from '../style.css';
+import { activeKeywordClass, keywordClass, contentClass } from '../style.css';
 
-import performSearch from '../data/performSearch';
-import filterByKeyword from '/./data/filterByKeyword';
+export function ResetSearchButton(props) {
+  const searchWord = useAppContext();
+  const { setSearchWord, setFilterWord, setDataIsLoading } = useSettersContext();
+  const { filterWord } = props;
 
-export function ResetSearchButton() {
-  return <input type="button" onclick={() => performSearch('')} value="Reset search" />;
+  const handleClick = () => {
+    if (searchWord !== '') {
+      setDataIsLoading(true);
+      setFilterWord('');
+      setSearchWord('');
+    }
+
+    if (filterWord !== '') {
+      setFilterWord('');
+    }
+  };
+
+  return <input type="button" onClick={handleClick} value="Reset search" />;
 }
 
 export function KeyWordButton(props) {
-  const { word } = props;
+  const { word, active, setFilterWord } = props;
   return (
     <input
-      class={keywordClass}
+      className={active ? activeKeywordClass : keywordClass}
       type="button"
-      onclick={e => filterByKeyword(e.target.value)}
+      onClick={e => setFilterWord(e.target.value)}
       value={word}
     />
   );
 }
 
 export function RefreshButton() {
-  return (
-    <input
-      type="button"
-      onclick={() => performSearch(window.dataStore.searchWord)}
-      value="Refresh"
-    />
-  );
+  const searchWord = useAppContext();
+  const { setSearchWord, setFilterWord } = useSettersContext();
+
+  const handleClick = () => {
+    setFilterWord('');
+    setSearchWord(searchWord);
+  };
+
+  return <input type="button" onClick={handleClick} value="Refresh" />;
 }
 
-export function TopWordsButtons({ dataStore }) {
-  const { articles, searchWord } = dataStore;
+export function TopWordsButtons(props) {
+  const { filterWord, setFilterWord } = props;
+  const searchWord = useAppContext();
+  const articles = useArticlesContext();
+
   if (!articles) {
     return '';
   }
@@ -51,7 +69,12 @@ export function TopWordsButtons({ dataStore }) {
       Filter result by most common word:
       <br />
       {fewKeyWord.map(word => (
-        <KeyWordButton word={word} />
+        <KeyWordButton
+          key={word}
+          active={word === filterWord}
+          word={word}
+          setFilterWord={setFilterWord}
+        />
       ))}
     </div>
   );

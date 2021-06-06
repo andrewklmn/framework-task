@@ -1,6 +1,7 @@
-/** @jsx createElement */
-/** @jsxFrag createFragment */
-import { createElement, createFragment } from '../framework/element';
+import React from 'react';
+
+import { useNews } from '../customHooks';
+import { AppContext, ArticlesContext, SettersContext } from '../context';
 
 import ErrorWindow from './ErrorWindow';
 import GivenDataArea from './GivenDataArea';
@@ -8,13 +9,33 @@ import Preloader from './Preloader';
 import ResultArea from './ResultArea';
 
 export default function App() {
-  const { dataIsLoading, error } = window.dataStore;
-  const content = dataIsLoading ? Preloader() : <ResultArea dataStore={dataStore} />;
+  const {
+    dataIsLoading,
+    error,
+    searchWord,
+    setSearchWord,
+    articles,
+    filterWord,
+    setFilterWord,
+    setDataIsLoading,
+  } = useNews();
+
+  const setters = { setFilterWord, setSearchWord, setDataIsLoading };
 
   return (
-    <>
-      <GivenDataArea dataStore={dataStore} />
-      {error && error !== '' ? <ErrorWindow error={error} /> : content}
-    </>
+    <AppContext.Provider value={searchWord}>
+      <ArticlesContext.Provider value={articles}>
+        <SettersContext.Provider value={setters}>
+          <GivenDataArea filterWord={filterWord} />
+          {error && error !== '' ? (
+            <ErrorWindow error={error} />
+          ) : dataIsLoading ? (
+            <Preloader />
+          ) : (
+            <ResultArea filterWord={filterWord} setFilterWord={setFilterWord} />
+          )}
+        </SettersContext.Provider>
+      </ArticlesContext.Provider>
+    </AppContext.Provider>
   );
 }
