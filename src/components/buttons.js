@@ -9,8 +9,7 @@ import { activeKeywordClass, keywordClass, contentClass } from '../style.css';
 
 export function ResetSearchButton(props) {
   const searchWord = useAppContext();
-  const { setSearchWord, setFilterWord, setDataIsLoading } = useSettersContext();
-  const { filterWord } = props;
+  const { setSearchWord, filterWord, setFilterWord, setDataIsLoading } = props;
 
   const handleClick = () => {
     if (searchWord !== '') {
@@ -39,9 +38,9 @@ export function KeyWordButton(props) {
   );
 }
 
-export function RefreshButton() {
+export function RefreshButton(props) {
   const searchWord = useAppContext();
-  const { setSearchWord, setFilterWord } = useSettersContext();
+  const { setSearchWord, setFilterWord } = props;
 
   const handleClick = () => {
     setFilterWord('');

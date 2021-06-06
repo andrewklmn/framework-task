@@ -21,22 +21,23 @@ export default function App() {
     setDataIsLoading,
   } = useNews();
 
-  const setters = { setFilterWord, setSearchWord, setDataIsLoading };
-
   return (
     <>
       <AppContext.Provider value={searchWord}>
         <ArticlesContext.Provider value={articles}>
-          <SettersContext.Provider value={setters}>
-            <GivenDataArea filterWord={filterWord} />
-            {error && error !== '' ? (
-              <ErrorWindow error={error} />
-            ) : dataIsLoading ? (
-              <Preloader />
-            ) : (
-              <ResultArea filterWord={filterWord} setFilterWord={setFilterWord} />
-            )}
-          </SettersContext.Provider>
+          <GivenDataArea
+            setSearchWord={setSearchWord}
+            filterWord={filterWord}
+            setFilterWord={setFilterWord}
+            setDataIsLoading={setDataIsLoading}
+          />
+          {error && error !== '' ? (
+            <ErrorWindow error={error} />
+          ) : dataIsLoading ? (
+            <Preloader />
+          ) : (
+            <ResultArea filterWord={filterWord} setFilterWord={setFilterWord} />
+          )}
         </ArticlesContext.Provider>
       </AppContext.Provider>
     </>
