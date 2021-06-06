@@ -12,13 +12,13 @@ export default function SearchField() {
   };
 
   return (
-    <>
+    <span>
       <span>Search by:</span>
       <input
-        onchange={handleChange}
+        onChange={handleChange}
         value={searchWord ? searchWord : ''}
         placeholder="Enter word or phrase"
       />
-    </>
+    </span>
   );
 }

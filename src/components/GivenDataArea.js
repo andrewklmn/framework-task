@@ -7,7 +7,7 @@ import { ResetSearchButton, RefreshButton } from './../components/buttons';
 export default function GivenDataArea(props) {
   const { filterWord } = props;
   return (
-    <div class={contentClass}>
+    <div className={contentClass}>
       <SearchField />
       <RefreshButton />
       <ResetSearchButton />

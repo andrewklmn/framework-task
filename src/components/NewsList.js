@@ -16,8 +16,8 @@ export default function NewsList(props) {
 
   return (
     <>
-      {list.map(article => (
-        <NewsItem article={article} />
+      {list.map((article, index) => (
+        <NewsItem key={index} article={article} />
       ))}
     </>
   );

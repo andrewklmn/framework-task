@@ -23,16 +23,16 @@ export function ResetSearchButton(props) {
     }
   };
 
-  return <input type="button" onclick={handleClick} value="Reset search" />;
+  return <input type="button" onClick={handleClick} value="Reset search" />;
 }
 
 export function KeyWordButton(props) {
   const { word, active, setFilterWord } = props;
   return (
     <input
-      class={active ? activeKeywordClass : keywordClass}
+      className={active ? activeKeywordClass : keywordClass}
       type="button"
-      onclick={e => setFilterWord(e.target.value)}
+      onClick={e => setFilterWord(e.target.value)}
       value={word}
     />
   );
@@ -47,7 +47,7 @@ export function RefreshButton() {
     setSearchWord(searchWord);
   };
 
-  return <input type="button" onclick={handleClick} value="Refresh" />;
+  return <input type="button" onClick={handleClick} value="Refresh" />;
 }
 
 export function TopWordsButtons(props) {
@@ -69,7 +69,12 @@ export function TopWordsButtons(props) {
       Filter result by most common word:
       <br />
       {fewKeyWord.map(word => (
-        <KeyWordButton active={word === filterWord} word={word} setFilterWord={setFilterWord} />
+        <KeyWordButton
+          key={word}
+          active={word === filterWord}
+          word={word}
+          setFilterWord={setFilterWord}
+        />
       ))}
     </div>
   );

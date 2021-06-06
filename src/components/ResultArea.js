@@ -9,10 +9,10 @@ export default function ResultArea(props) {
 
   return (
     <>
-      <div class={containerClass}>
+      <div className={containerClass}>
         <TopWordsButtons filterWord={filterWord} setFilterWord={setFilterWord} />
       </div>
-      <div class={containerClass}>
+      <div className={containerClass}>
         <NewsList filterWord={filterWord} />
       </div>
     </>
