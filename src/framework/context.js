@@ -22,7 +22,7 @@ export function createContext(defaultValue) {
   let hasWarnedAboutUsingUseContext = false;
 
   context.Provider = function ({ value = defaultValue, children }) {
-    if (!Object.is(context.value, value)) {
+    if (!Object.is(JSON.stringify(context.value), JSON.stringify(value))) {
       current.shouldReRender = true;
       context.value = value;
     }
