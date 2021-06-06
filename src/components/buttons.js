@@ -1,14 +1,16 @@
 /** @jsx createElement */
 /** @jsxFrag createFragment */
 import { createElement, createFragment } from '../framework/element';
-import { useAppContext, useArticlesContext } from '../context';
+import { useAppContext, useArticlesContext, useSettersContext } from '../context';
 
 import { NUMBER_OF_TOP_WORDS } from '../constants';
 import { getTopWords, removeArticleMakerSignFromTitle } from '../utils';
 import { activeKeywordClass, keywordClass, contentClass } from '../style.css';
 
 export function ResetSearchButton(props) {
-  const { searchWord, setSearchWord, filterWord, setFilterWord, setDataIsLoading } = props;
+  const searchWord = useAppContext();
+  const { setSearchWord, setFilterWord, setDataIsLoading } = useSettersContext();
+  const { filterWord } = props;
 
   const handleClick = () => {
     if (searchWord !== '') {
@@ -37,8 +39,10 @@ export function KeyWordButton(props) {
   );
 }
 
-export function RefreshButton(props) {
-  const { searchWord, setSearchWord, setFilterWord } = props;
+export function RefreshButton() {
+  const searchWord = useAppContext();
+  const { setSearchWord, setFilterWord } = useSettersContext();
+
   const handleClick = () => {
     setFilterWord('');
     setSearchWord(searchWord);

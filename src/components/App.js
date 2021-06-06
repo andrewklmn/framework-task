@@ -2,7 +2,7 @@
 /** @jsxFrag createFragment */
 import { createElement, createFragment } from '../framework';
 import { useNews } from '../customHooks';
-import { AppContext, ArticlesContext } from '../context';
+import { AppContext, ArticlesContext, SettersContext } from '../context';
 
 import ErrorWindow from './ErrorWindow';
 import GivenDataArea from './GivenDataArea';
@@ -21,22 +21,22 @@ export default function App() {
     setDataIsLoading,
   } = useNews();
 
+  const setters = { setFilterWord, setSearchWord, setDataIsLoading };
+
   return (
     <>
       <AppContext.Provider value={searchWord}>
         <ArticlesContext.Provider value={articles}>
-          <GivenDataArea
-            setFilterWord={setFilterWord}
-            setSearchWord={setSearchWord}
-            setDataIsLoading={setDataIsLoading}
-          />
-          {error && error !== '' ? (
-            <ErrorWindow error={error} />
-          ) : dataIsLoading ? (
-            <Preloader />
-          ) : (
-            <ResultArea filterWord={filterWord} setFilterWord={setFilterWord} />
-          )}
+          <SettersContext.Provider value={setters}>
+            <GivenDataArea filterWord={filterWord} />
+            {error && error !== '' ? (
+              <ErrorWindow error={error} />
+            ) : dataIsLoading ? (
+              <Preloader />
+            ) : (
+              <ResultArea filterWord={filterWord} setFilterWord={setFilterWord} />
+            )}
+          </SettersContext.Provider>
         </ArticlesContext.Provider>
       </AppContext.Provider>
     </>
