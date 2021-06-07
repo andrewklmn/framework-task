@@ -26,7 +26,7 @@ export default function App() {
     <AppContext.Provider value={searchWord}>
       <ArticlesContext.Provider value={articles}>
         <SettersContext.Provider value={setters}>
-          <GivenDataArea filterWord={filterWord} />
+          <GivenDataArea />
           {error && error !== '' ? (
             <ErrorWindow error={error} />
           ) : dataIsLoading ? (

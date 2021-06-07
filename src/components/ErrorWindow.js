@@ -2,10 +2,10 @@ import React from 'react';
 
 import { contentClass } from '../style.css';
 
-export default function ErrorWindow(text) {
+export default function ErrorWindow({ error }) {
   return (
-    <div class={contentClass} style="color: red;">
-      {text}
+    <div className={contentClass} style={{ color: 'red' }}>
+      {error}
     </div>
   );
 }

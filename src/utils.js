@@ -18,6 +18,14 @@ const notImportantWords = [
 
 export const isFunction = func => typeof func === 'function';
 
+export const debounce = (fn, waitTimeMs) => {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn(...args), waitTimeMs);
+  };
+};
+
 export function filterArticleByWord(article, word) {
   const searchWord = word ? word.toLowerCase() : '';
   if (

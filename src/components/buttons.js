@@ -23,7 +23,7 @@ export function ResetSearchButton(props) {
     }
   };
 
-  return <input type="button" onClick={handleClick} value="Reset search" />;
+  return <input type="button" onClick={handleClick} defaultValue="Reset search" />;
 }
 
 export function KeyWordButton(props) {
