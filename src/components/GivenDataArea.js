@@ -4,8 +4,7 @@ import { contentClass } from './../style.css';
 import SearchField from './../components/SearchFiled';
 import { ResetSearchButton, RefreshButton } from './../components/buttons';
 
-export default function GivenDataArea(props) {
-  const { filterWord } = props;
+export default function GivenDataArea() {
   return (
     <div className={contentClass}>
       <SearchField />

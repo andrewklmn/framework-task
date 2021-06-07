@@ -40,9 +40,13 @@ export const useNews = () => {
         setFilterWord('');
         setArticles(articles);
       })
-      .catch(setError)
+      .catch(e => {
+        setError(e.toString());
+      })
       .finally(() => {
-        setDataIsLoading(false);
+        setTimeout(() => {
+          setDataIsLoading(false);
+        }, 300);
       });
   }, [searchWord]);
 
