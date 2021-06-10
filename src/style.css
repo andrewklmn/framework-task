@@ -3,6 +3,16 @@ body {
   padding: 0;
 }
 
+.night {
+  color: white;
+  background-color: black;
+}
+
+.day {
+  color: black;
+  background-color: white;
+}
+
 .containerClass {
   display: flex;
   flex-direction: row;
@@ -10,6 +20,8 @@ body {
   flex-wrap: wrap;
   gap: 40px;
   align-items: center;
+
+  margin-bottom: 10px;
 }
 
 .newsItemClass {
