@@ -1,15 +1,13 @@
 import React from 'react';
-import { containerClass } from './../style.css';
+import { containerClass, day, night } from './../style.css';
 import Checkbox from './Checkbox';
 
 export default function ThemeSelector() {
   const handleChangeTheme = ({ target }) => {
     if (target.checked) {
-      document.body.style.backgroundColor = 'black';
-      document.body.style.color = 'white';
+      document.body.className = night;
     } else {
-      document.body.style.backgroundColor = 'white';
-      document.body.style.color = 'black';
+      document.body.className = day;
     }
   };
 

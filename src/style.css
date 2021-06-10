@@ -3,6 +3,16 @@ body {
   padding: 0;
 }
 
+.night {
+  color: white;
+  background-color: black;
+}
+
+.day {
+  color: black;
+  background-color: white;
+}
+
 .containerClass {
   display: flex;
   flex-direction: row;

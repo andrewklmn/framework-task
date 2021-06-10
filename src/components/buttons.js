@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useAppContext, useArticlesContext, useSettersContext } from '../context';
 
-import { NUMBER_OF_TOP_WORDS } from '../constants';
+import { NUMBER_OF_TOP_WORDS, TIME_OF_LOADING_IMMITATION_MS } from '../constants';
 import { getTopWords, removeArticleMakerSignFromTitle } from '../utils';
 import { activeKeywordClass, keywordClass, contentClass } from '../style.css';
 
@@ -40,11 +40,13 @@ export function KeyWordButton(props) {
 
 export function RefreshButton() {
   const searchWord = useAppContext();
-  const { setSearchWord, setFilterWord } = useSettersContext();
+  const { setSearchWord, setFilterWord, setDataIsLoading } = useSettersContext();
 
   const handleClick = () => {
+    setDataIsLoading(true);
     setFilterWord('');
     setSearchWord(searchWord);
+    setTimeout(() => setDataIsLoading(false), TIME_OF_LOADING_IMMITATION_MS);
   };
 
   return <input type="button" onClick={handleClick} value="Refresh" />;
