@@ -19,6 +19,8 @@ Expected Features:
 
 ## Update 10.06.2021
 
+[DEMO is here](https://andrewklmn.github.io/framework-task/)
+
 ### Result Features:
 
 1. Collecting and reading the latest top news from News API.
