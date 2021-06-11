@@ -13,6 +13,32 @@ body {
   background-color: white;
 }
 
+.search {
+  padding: 10px;
+  border: thin solid #555;
+  border-radius: 20px;
+  outline: none;
+  cursor: text;
+}
+
+.search:focus {
+  border-color: blue;
+}
+
+.btn {
+  color: black;
+  background-color: rgb(199, 199, 199);
+  padding: 10px;
+  border: thin solid #555;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  color: white;
+  background-color: gray;
+}
+
 .containerClass {
   display: flex;
   flex-direction: row;
@@ -37,18 +63,31 @@ body {
 }
 
 .activeKeywordClass {
+  padding: 10px;
   color: red;
+  border: thin solid red;
   border-radius: 20px;
+  cursor: not-allowed;
 }
 
 .keywordClass {
+  padding: 10px;
   color: blue;
+  border: thin solid blue;
   border-radius: 20px;
+  cursor: pointer;
+}
+
+.keywordClass:hover {
+  color: white;
+  background-color: blue;
+  border-radius: 20px;
+  cursor: pointer;
 }
 
 .contentClass {
   width: 100%;
   text-align: center;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   text-align: center;
 }

@@ -2,6 +2,7 @@ import React from 'react';
 
 import { useAppContext, useSettersContext } from '../context';
 import { debounce } from '../utils';
+import { search } from '../style.css';
 
 export default function SearchField() {
   const searchWord = useAppContext();
@@ -19,6 +20,7 @@ export default function SearchField() {
     <span key={searchWord}>
       <span>Search by:</span>
       <input
+        className={search}
         type="text"
         onChange={({ currentTarget }) => handleChange(currentTarget)}
         defaultValue={searchWord && searchWord !== '' ? searchWord : ''}

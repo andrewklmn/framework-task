@@ -4,13 +4,11 @@ import { useAppContext, useArticlesContext, useSettersContext } from '../context
 
 import { NUMBER_OF_TOP_WORDS, TIME_OF_LOADING_IMMITATION_MS } from '../constants';
 import { getTopWords, removeArticleMakerSignFromTitle } from '../utils';
-import { activeKeywordClass, keywordClass, contentClass } from '../style.css';
+import { activeKeywordClass, keywordClass, contentClass, btn } from '../style.css';
 
 export function ResetSearchButton(props) {
   const searchWord = useAppContext();
   const { setSearchWord, setFilterWord, setDataIsLoading } = useSettersContext();
-  const { filterWord } = props;
-
   const handleClick = () => {
     if (searchWord !== '') {
       setDataIsLoading(true);
@@ -23,7 +21,7 @@ export function ResetSearchButton(props) {
     }
   };
 
-  return <input type="button" onClick={handleClick} defaultValue="Reset search" />;
+  return <input className={btn} type="button" onClick={handleClick} defaultValue="Reset search" />;
 }
 
 export function KeyWordButton(props) {
@@ -49,7 +47,7 @@ export function RefreshButton() {
     setTimeout(() => setDataIsLoading(false), TIME_OF_LOADING_IMMITATION_MS);
   };
 
-  return <input type="button" onClick={handleClick} value="Refresh" />;
+  return <input className={btn} type="button" onClick={handleClick} value="Refresh" />;
 }
 
 export function TopWordsButtons(props) {
