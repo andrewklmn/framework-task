@@ -12,13 +12,9 @@ export function ResetSearchButton(props) {
   const handleClick = () => {
     if (searchWord !== '') {
       setDataIsLoading(true);
-      setFilterWord('');
       setSearchWord('');
     }
-
-    if (filterWord !== '') {
-      setFilterWord('');
-    }
+    setFilterWord('');
   };
 
   return <input className={btn} type="button" onClick={handleClick} defaultValue="Reset search" />;
