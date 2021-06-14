@@ -9,7 +9,7 @@ export default function ResultArea(props) {
   const { filterWord, setFilterWord } = props;
   const articles = useArticlesContext();
 
-  if (articles.length == 0) {
+  if (articles.length == 0) { //TODO
     return <div className={containerClass}>No news to show. Try to reduce search phrase...</div>;
   }
 

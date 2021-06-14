@@ -1,12 +1,10 @@
 import React from 'react';
-
 import { useAppContext, useArticlesContext, useSettersContext } from '../context';
-
 import { NUMBER_OF_TOP_WORDS, TIME_OF_LOADING_IMMITATION_MS } from '../constants';
 import { getTopWords, removeArticleMakerSignFromTitle } from '../utils';
 import { activeKeywordClass, keywordClass, contentClass, btn } from '../style.css';
 
-export function ResetSearchButton(props) {
+export function ResetSearchButton() {  // TODO
   const searchWord = useAppContext();
   const { setSearchWord, setFilterWord, setDataIsLoading } = useSettersContext();
   const handleClick = () => {
@@ -20,8 +18,7 @@ export function ResetSearchButton(props) {
   return <input className={btn} type="button" onClick={handleClick} defaultValue="Reset search" />;
 }
 
-export function KeyWordButton(props) {
-  const { word, active, setFilterWord } = props;
+export function KeyWordButton({ word, active, setFilterWord }) {
   return (
     <input
       className={active ? activeKeywordClass : keywordClass}
@@ -40,14 +37,14 @@ export function RefreshButton() {
     setDataIsLoading(true);
     setFilterWord('');
     setSearchWord(searchWord);
-    setTimeout(() => setDataIsLoading(false), TIME_OF_LOADING_IMMITATION_MS);
+    setTimeout(() => setDataIsLoading(false), TIME_OF_LOADING_IMMITATION_MS); // TODO
   };
 
   return <input className={btn} type="button" onClick={handleClick} value="Refresh" />;
 }
 
 export function TopWordsButtons(props) {
-  const { filterWord, setFilterWord } = props;
+  const { filterWord, setFilterWord } = props; // TODO
   const searchWord = useAppContext();
   const articles = useArticlesContext();
 
@@ -58,7 +55,8 @@ export function TopWordsButtons(props) {
     const { content, description, title } = article;
     return (acc += `${description} ${content} ${removeArticleMakerSignFromTitle(title)} `);
   }, '');
-  const fewKeyWord = getTopWords(wholeText, NUMBER_OF_TOP_WORDS, searchWord);
+
+  const fewKeyWord = getTopWords(wholeText, NUMBER_OF_TOP_WORDS, searchWord); // TODO
 
   return (
     <div className={contentClass}>

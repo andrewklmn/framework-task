@@ -16,7 +16,7 @@ const notImportantWords = [
   'there',
 ];
 
-export const isFunction = func => typeof func === 'function';
+export const isFunction = func => typeof func === 'function';  // TODO
 
 export const debounce = (fn, waitTimeMs) => {
   let timeout;
@@ -39,12 +39,11 @@ export function filterArticleByWord(article, word) {
   return false;
 }
 
-export function getTopWords(text, numberOfWords, excludeWord = '') {
+export function getTopWords(text='', numberOfWords, excludeWord = '') {
   let regex = '.*[a-zA-Zа-яА-Я].*';
   if (text.match(regex)) {
     let wordMap = new Map();
     text.split(' ').forEach(word => {
-      if (word) {
         word = word
           .toLowerCase()
           .replace(
@@ -58,7 +57,7 @@ export function getTopWords(text, numberOfWords, excludeWord = '') {
           word.trim() == '' ||
           word.replace(/[0-9a-zа-яїєіґ\-]/g, '').length > 0 ||
           word == excludeWord.toLowerCase() ||
-          word.replace(/^[\W\-]/g, '').length < 6
+          word.replace(/^[\W\-]/g, '').length < 6  // TODO magicNumber
         ) {
           return;
         }
@@ -69,7 +68,6 @@ export function getTopWords(text, numberOfWords, excludeWord = '') {
         } else {
           wordMap.set(word, 1);
         }
-      }
     });
     const sortedWordMap = new Map([...wordMap.entries()].sort((a, b) => b[1] - a[1]));
 
@@ -80,7 +78,7 @@ export function getTopWords(text, numberOfWords, excludeWord = '') {
         return res;
       }
     });
-    return result.filter(res => res !== undefined);
+    return result.filter(res => res !== undefined); // TODO  Boolean
   } else {
     return [];
   }
@@ -98,7 +96,7 @@ export function removeArticleMakerSignFromTitle(title) {
   return title;
 }
 
-export function isWordInArticle({ title, content, description }, searchWord) {
+export function isWordInArticle({ title, content, description }, searchWord) { // TODO
   if (
     searchWord == '' ||
     //(description && description.toLowerCase().includes(searchWord.toLowerCase())) ||
@@ -117,9 +115,11 @@ export function prepareUrlForFetch(url, data) {
   let params = Object.entries(data);
   if (params && params.length) {
     resultUrl = resultUrl + '?';
-    params = params.map(param => {
+    params = params.map(([first, second]) => {// TODO
       return param[0] + '=' + encodeURI(param[1]);
     });
   }
   return resultUrl + params.join('&');
 }
+
+const isEmptyStr = str => str === '';

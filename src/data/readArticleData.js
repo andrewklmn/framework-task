@@ -1,4 +1,4 @@
-import { REFRESH_DELAY_IN_MS } from './../constants';
+import { REFRESH_DELAY_IN_MS } from '../constants';
 import newLoadedDataHandler from './newLoadedDataHandler';
 
 export default function readArticlesData(url) {
