@@ -1,3 +1,5 @@
+import { NUMBER_OF_TOP_WORDS, MIN_LENGTH_OF_KEYWORD } from './constants';
+
 const notImportantWords = [
   'chars]',
   'ahead',
@@ -39,8 +41,8 @@ export function filterArticleByWord(article, word) {
   return false;
 }
 
-export function getTopWords(text = '', numberOfWords, excludeWord = '') {
-  let regex = '.*[a-zA-Zа-яА-Я].*';
+export function getTopWords(text, excludeWord = '') {
+  let regex = /.*[a-zA-Zа-яА-Я].*/;
   if (text.match(regex)) {
     let wordMap = new Map();
     text.split(' ').forEach(word => {
@@ -57,7 +59,7 @@ export function getTopWords(text = '', numberOfWords, excludeWord = '') {
         word.trim() === '' ||
         word.replace(/[0-9a-zа-яїєіґ\-]/g, '').length > 0 ||
         word === excludeWord.toLowerCase() ||
-        word.replace(/^[\W\-]/g, '').length < 6
+        word.replace(/^[\W\-]/g, '').length < MIN_LENGTH_OF_KEYWORD
       ) {
         return;
       }
@@ -71,7 +73,9 @@ export function getTopWords(text = '', numberOfWords, excludeWord = '') {
     });
     const sortedWordMap = new Map([...wordMap.entries()].sort((a, b) => b[1] - a[1]));
 
-    let result = Array.from(sortedWordMap.keys()).filter((word, index) => index < numberOfWords);
+    let result = Array.from(sortedWordMap.keys()).filter(
+      (word, index) => index < NUMBER_OF_TOP_WORDS,
+    );
     result = result.map(res => {
       res = res.replace(/[/.,]/g, '');
       if (res !== '') {

@@ -4,7 +4,7 @@ import { NUMBER_OF_TOP_WORDS, TIME_OF_LOADING_IMMITATION_MS } from '../constants
 import { getTopWords, removeArticleMakerSignFromTitle } from '../utils';
 import { activeKeywordClass, keywordClass, contentClass, btn } from '../style.css';
 
-export function ResetSearchButton() {  // TODO
+export function ResetSearchButton() {
   const searchWord = useAppContext();
   const { setSearchWord, setFilterWord, setDataIsLoading } = useSettersContext();
   const handleClick = () => {
@@ -37,14 +37,13 @@ export function RefreshButton() {
     setDataIsLoading(true);
     setFilterWord('');
     setSearchWord(searchWord);
-    setTimeout(() => setDataIsLoading(false), TIME_OF_LOADING_IMMITATION_MS); // TODO
+    setDataIsLoading(false);
   };
 
   return <input className={btn} type="button" onClick={handleClick} value="Refresh" />;
 }
 
-export function TopWordsButtons(props) {
-  const { filterWord, setFilterWord } = props; // TODO
+export function TopWordsButtons({ filterWord, setFilterWord }) {
   const searchWord = useAppContext();
   const articles = useArticlesContext();
 
@@ -55,8 +54,7 @@ export function TopWordsButtons(props) {
     const { content, description, title } = article;
     return (acc += `${description} ${content} ${removeArticleMakerSignFromTitle(title)} `);
   }, '');
-
-  const fewKeyWord = getTopWords(wholeText, NUMBER_OF_TOP_WORDS, searchWord); // TODO
+  const fewKeyWord = getTopWords(wholeText, searchWord);
 
   return (
     <div className={contentClass}>
