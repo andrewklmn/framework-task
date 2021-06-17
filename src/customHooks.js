@@ -26,7 +26,7 @@ export const useNews = () => {
       apiKey: NEWS_API_KEY,
     };
 
-    if (searchWord && !searchWord === '') {
+    if (searchWord) {
       params = {
         url: URL_FOR_SEARCH_IN_NEWS,
         q: searchWord,
