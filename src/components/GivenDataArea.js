@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { contentClass } from '../style.css';
-import SearchField from '../components/SearchFiled';
-import { ResetSearchButton, RefreshButton } from './buttons'; //TODO
+import SearchField from './SearchFiled';
+import { ResetSearchButton, RefreshButton } from './buttons';
 
 export default function GivenDataArea() {
   return (

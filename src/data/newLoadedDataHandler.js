@@ -3,6 +3,6 @@ export default function newLoadedDataHandler(data, url) {
     return Promise.reject(data.message);
   }
   localStorage.setItem(encodeURI(url), JSON.stringify(data.articles));
-  localStorage.setItem(encodeURI(url + '-lastReadAt'), Date.now()); // TODO
+  localStorage.setItem(encodeURI(`${url}-lastReadAt`), Date.now());
   return Promise.resolve(data.articles);
 }

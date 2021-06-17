@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classname';
+import classNames from 'classnames';
 import { contentClass, error } from '../style.css';
 
 export default function ErrorWindow({ error }) {

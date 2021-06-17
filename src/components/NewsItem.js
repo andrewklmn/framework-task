@@ -8,7 +8,11 @@ export default function NewsItem({ article }) {
   return (
     <div className={newsItemClass}>
       <h3>{title}</h3>
-      {urlToImage ? <img alt='' className={newsImageClass} src={urlToImage} /> : ''}
+      {urlToImage ? (
+        <img alt="Article illustration" className={newsImageClass} src={urlToImage} />
+      ) : (
+        ''
+      )}
       <p>{description ? description : ''}</p>
       <a target="_blank" href={url}>
         Read more ...{' '}

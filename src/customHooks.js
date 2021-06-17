@@ -26,7 +26,7 @@ export const useNews = () => {
       apiKey: NEWS_API_KEY,
     };
 
-    if (searchWord && !searchWord == '') { // TODO
+    if (searchWord) {
       params = {
         url: URL_FOR_SEARCH_IN_NEWS,
         q: searchWord,
@@ -44,9 +44,7 @@ export const useNews = () => {
         setError(err.toString());
       })
       .finally(() => {
-        setTimeout(() => { // TODO
-          setDataIsLoading(false);
-        }, 300);
+        setDataIsLoading(false);
       });
   }, [searchWord]);
 

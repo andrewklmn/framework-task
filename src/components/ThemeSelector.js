@@ -13,7 +13,7 @@ export default function ThemeSelector() {
 
   return (
     <div className={containerClass}>
-      <Checkbox label='Night mode' onChange={handleChangeTheme} /> //TODO
+      <Checkbox label="Night mode" onChange={handleChangeTheme} />
     </div>
   );
 }
