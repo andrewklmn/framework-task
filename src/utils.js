@@ -82,10 +82,9 @@ export function getTopWords(text, excludeWord = '') {
         return res;
       }
     });
-    return result.filter(res => res !== undefined); // TODO  Boolean
-  } else {
-    return [];
+    return result.filter(res => res !== undefined);
   }
+  return [];
 }
 
 export function removeArticleMakerSignFromTitle(title) {
@@ -104,7 +103,6 @@ export function isWordInArticle({ title, content, description }, searchWord) {
   // TODO
   if (
     searchWord === '' ||
-    //(description && description.toLowerCase().includes(searchWord.toLowerCase())) ||
     (content && content.toLowerCase().includes(searchWord.toLowerCase())) ||
     (title &&
       removeArticleMakerSignFromTitle(title).toLowerCase().includes(searchWord.toLowerCase()))
