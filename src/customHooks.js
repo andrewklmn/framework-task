@@ -44,10 +44,7 @@ export const useNews = () => {
         setError(err.toString());
       })
       .finally(() => {
-        setTimeout(() => {
-          // TODO
-          setDataIsLoading(false);
-        }, 300);
+        setDataIsLoading(false);
       });
   }, [searchWord]);
 

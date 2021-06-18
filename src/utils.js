@@ -18,8 +18,6 @@ const notImportantWords = [
   'there',
 ];
 
-export const isFunction = func => typeof func === 'function'; // TODO
-
 export const debounce = (fn, waitTimeMs) => {
   let timeout;
   return (...args) => {
@@ -82,7 +80,7 @@ export function getTopWords(text, excludeWord = '') {
         return res;
       }
     });
-    return result.filter(res => res !== undefined);
+    return result.filter(res => Boolean(res));
   }
   return [];
 }
@@ -99,8 +97,7 @@ export function removeArticleMakerSignFromTitle(title) {
   return title;
 }
 
-export function isWordInArticle({ title, content, description }, searchWord) {
-  // TODO
+export function isWordInArticle({ title, content }, searchWord) {
   if (
     searchWord === '' ||
     (content && content.toLowerCase().includes(searchWord.toLowerCase())) ||
@@ -118,10 +115,7 @@ export function prepareUrlForFetch(url, data) {
   let params = Object.entries(data);
   if (params && params.length) {
     resultUrl = resultUrl + '?';
-    params = params.map(([first, second]) => {
-      // TODO
-      return param[0] + '=' + encodeURI(param[1]);
-    });
+    params = params.map(([key, value]) => `${key}=${encodeURI(value)}`);
   }
   return resultUrl + params.join('&');
 }
